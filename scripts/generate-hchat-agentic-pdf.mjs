@@ -3,8 +3,8 @@ import { fileURLToPath } from 'url'
 import path from 'path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const htmlPath = path.resolve(__dirname, '../public/gitlab-agentic/index.html')
-const outputPath = path.resolve(__dirname, '../public/gitlab-agentic/GitLab-Agentic-Workflows.pdf')
+const htmlPath = path.resolve(__dirname, '../public/hchat-agentic/index.html')
+const outputPath = path.resolve(__dirname, '../public/hchat-agentic/HChat-Agentic-Workflows.pdf')
 
 async function generatePDF() {
   const browser = await puppeteer.launch({

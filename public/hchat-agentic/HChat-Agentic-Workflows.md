@@ -1,6 +1,6 @@
-# GitLab Agentic Workflows - 내부망 AI 코딩 에이전트 플랫폼
+# H Chat Agentic Workflows - AI 코딩 에이전트 플랫폼
 
-> GitLab CI/CD + LLM Agent Pipeline · Issue-to-MR 자동화 · 보안 샌드박스 실행
+> H Chat + GitLab CI/CD + LLM Agent Pipeline · Issue-to-MR 자동화 · 보안 샌드박스 실행
 
 **AI 전략팀 | 2025**
 
@@ -37,7 +37,7 @@ Issue 생성 → Agent 할당 → 샌드박스 실행 → 코드 구현 → PR �
 
 ---
 
-## 02. 왜 내부망 GitLab 에이전트인가
+## 02. 왜 H Chat 코딩 에이전트인가
 
 ### GitHub Copilot Agent의 한계
 - 코드가 GitHub 클라우드 샌드박스로 전송
@@ -46,7 +46,7 @@ Issue 생성 → Agent 할당 → 샌드박스 실행 → 코드 구현 → PR �
 - 엔터프라이즈 보안 정책 충족 어려움
 - 모델 선택 제한 (GitHub 제공 모델만)
 
-### 내부망 GitLab Agent의 장점
+### H Chat 코딩 에이전트의 장점
 - 폐쇄망 내 전체 파이프라인 실행
 - 소스코드 외부 유출 Zero
 - 사내 시스템 직접 연동 (SAP, Jira, DMS)
@@ -73,7 +73,7 @@ Issue 생성 → Agent 할당 → 샌드박스 실행 → 코드 구현 → PR �
 | Sandbox | 격리 Docker 컨테이너 (per-task) |
 | AI Engine | Claude API / vLLM (자체 호스팅) |
 | Agent Framework | Claude Agent SDK / LangGraph |
-| MCP Server | GitLab MCP + 사내 시스템 MCP |
+| MCP Server | H Chat MCP + GitLab MCP + 사내 시스템 MCP |
 | Storage | PostgreSQL + Redis + MinIO |
 | Monitoring | Grafana + Prometheus + Sentry |
 
@@ -89,7 +89,7 @@ Issue 생성 → Agent 할당 → 샌드박스 실행 → 코드 구현 → PR �
 
 ### 워크플로우
 
-1. **Issue Trigger (Webhook)**: 개발자가 GitLab Issue에 `/agent` 라벨 또는 `@ai-agent` 멘션 → GitLab Webhook이 Agent Orchestrator에 이벤트 전송
+1. **Issue Trigger (H Chat)**: 개발자가 H Chat에서 `/coding` 명령 또는 GitLab Issue에 `@hchat-agent` 멘션 → H Chat이 Agent Orchestrator에 이벤트 전송
 
 2. **Context Analysis (Sonnet)**: 이슈 본문 + 코멘트 + 코드베이스 구조 분석 → 변경 필요 파일 식별, 영향 범위 산정, 구현 계획(Spec) 수립
 
@@ -241,7 +241,7 @@ Issue Analyzer → Code Planner → Code Generator → Test Generator → Review
 | 항목 | 비용 | 비율 |
 |------|------|------|
 | AI API (Claude) | 0.9억원 | 47% |
-| GitLab Runner 인프라 | 0.4억원 | 21% |
+| H Chat + GitLab Runner 인프라 | 0.4억원 | 21% |
 | 운영 인력 (2명) | 0.3억원 | 16% |
 | 모니터링/보안 도구 | 0.2억원 | 11% |
 | 교육/온보딩 | 0.1억원 | 5% |
@@ -268,14 +268,14 @@ Issue Analyzer → Code Planner → Code Generator → Test Generator → Review
 
 | MCP Server | 기능 |
 |-----------|------|
-| GitLab MCP | Issue/MR CRUD, 파이프라인 상태, 코드 리뷰 |
+| H Chat + GitLab MCP | H Chat 명령 연동, Issue/MR CRUD, 파이프라인 상태, 코드 리뷰 |
 | Confluence MCP | 사내 위키 검색, 기술 문서 참조, RAG 보강 |
 | Jira MCP | 프로젝트 이슈 연동, 스프린트 상태 조회 |
 | SAP MCP | 비즈니스 로직 참조, 데이터 모델 조회 |
 | SonarQube MCP | 코드 품질 메트릭, 보안 취약점 리포트 |
 | 사내 DB MCP | 테이블 스키마 조회, 샘플 데이터 참조 |
 
-> **MCP (Model Context Protocol)** — AI 에이전트가 외부 도구와 데이터 소스에 표준화된 방식으로 접근하는 프로토콜. 사내 시스템마다 MCP Server를 구현하면 에이전트가 코드 생성 시 실시간으로 사내 컨텍스트를 참조하여 도메인 정확도를 극대화합니다.
+> **MCP (Model Context Protocol)** — AI 에이전트가 외부 도구와 데이터 소스에 표준화된 방식으로 접근하는 프로토콜. H Chat 플랫폼에서 MCP Server를 통합하면 에이전트가 코드 생성 시 실시간으로 사내 컨텍스트를 참조하여 도메인 정확도를 극대화합니다.
 
 ---
 
@@ -283,7 +283,7 @@ Issue Analyzer → Code Planner → Code Generator → Test Generator → Review
 
 ### Phase 1: 파일럿 (1-3개월)
 - 1개 팀 (5명) · 버그 수정 + 테스트 생성 자동화
-- GitLab Runner + Claude API 연동
+- H Chat + GitLab Runner + Claude API 연동
 - 목표: 주 20건 이슈 자동 처리
 
 ### Phase 2: 확장 (4-6개월)
@@ -297,9 +297,9 @@ Issue Analyzer → Code Planner → Code Generator → Test Generator → Review
 - 목표: 월 500건 자동 처리
 
 ### Phase 4: 전사 플랫폼 (12개월+)
-- 그룹사 전체 개발 조직 · 셀프 서비스 에이전트 마켓
+- 그룹사 전체 개발 조직 · H Chat 에이전트 마켓플레이스
 - 커스텀 에이전트 빌더, 멀티 모델 지원
-- 목표: 전사 AI 개발 플랫폼
+- 목표: H Chat 전사 AI 개발 플랫폼
 
 ---
 
@@ -311,7 +311,7 @@ Issue Analyzer → Code Planner → Code Generator → Test Generator → Review
 | 보안 취약점 주입 | 중간 | 높음 | SAST/DAST 필수 통과 + 시크릿 스캔 + 네트워크 격리 + 보안팀 리뷰 게이트 |
 | API 비용 초과 | 중간 | 중간 | Haiku 우선 전략 + 월간 비용 상한 + 프롬프트 캐싱 |
 | 개발자 저항 | 중간 | 중간 | 파일럿 성공 사례 공유 + 점진적 도입 + 챔피언 개발자 육성 |
-| 모델 의존성 | 낮음 | 중간 | 멀티 모델 아키텍처 + model_version 태깅 + 프롬프트 GitOps |
+| 모델 의존성 | 낮음 | 중간 | H Chat 멀티 모델 아키텍처 + model_version 태깅 + 프롬프트 GitOps |
 
 ### 핵심 원칙
 - AI 생성 코드는 반드시 CI 파이프라인 + 휴먼 리뷰를 통과해야 머지
@@ -325,7 +325,7 @@ Issue Analyzer → Code Planner → Code Generator → Test Generator → Review
 
 | 주차 | 목표 | 산출물 | 성공 기준 |
 |------|------|--------|----------|
-| 1-2 | 인프라 구축 + 보안 검증 | GitLab Runner, 샌드박스 Docker, 보안 검증 | 보안팀 감사 통과 |
+| 1-2 | 인프라 구축 + 보안 검증 | H Chat 연동, GitLab Runner, 샌드박스 Docker, 보안 검증 | 보안팀 감사 통과 |
 | 3-4 | Agent Pipeline v0.1 | Issue Analyzer + Code Generator 작동, CI 연동 | 정확도 >80% |
 | 5-6 | 파일럿 시작 | 1개 팀 온보딩, 버그 수정 + 테스트 생성 자동화 | 주 10건 처리 |
 | 7-8 | 파일럿 확대 | Quality Gate 강화, MCP 연동 | 주 20건 처리 |
@@ -355,4 +355,4 @@ Issue Analyzer → Code Planner → Code Generator → Test Generator → Review
 
 ---
 
-*GitLab Agentic Workflows — 내부망 AI 코딩 에이전트 플랫폼 구축 전략*
+*H Chat Agentic Workflows — AI 코딩 에이전트 플랫폼 구축 전략*
