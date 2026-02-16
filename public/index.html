@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Strategy Reports</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0f1a 0%, #0f172a 50%, #0a1628 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #00aad2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+        .header p {
+            font-size: 18px;
+            color: #94a3b8;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 40px;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 45px 40px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        .card:nth-child(1)::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .card:nth-child(2)::before { background: linear-gradient(90deg, #00aad2, #38d9f5); }
+        .card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .card-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .card:nth-child(1) .card-badge {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .card:nth-child(2) .card-badge {
+            background: rgba(0, 170, 210, 0.2);
+            color: #38d9f5;
+            border: 1px solid rgba(0, 170, 210, 0.3);
+        }
+
+        .card h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .card p {
+            font-size: 15px;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .card-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .link-html {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+        }
+        .link-html:hover { background: rgba(59, 130, 246, 0.3); }
+        .link-md {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+        }
+        .link-md:hover { background: rgba(16, 185, 129, 0.3); }
+        .link-pdf {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+        .link-pdf:hover { background: rgba(239, 68, 68, 0.3); }
+
+        .card:nth-child(2) .link-html {
+            background: rgba(0, 170, 210, 0.15);
+            border: 1px solid rgba(0, 170, 210, 0.3);
+            color: #38d9f5;
+        }
+        .card:nth-child(2) .link-html:hover { background: rgba(0, 170, 210, 0.3); }
+
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            color: #475569;
+            font-size: 13px;
+        }
+
+        @media (max-width: 900px) {
+            .cards { grid-template-columns: 1fr; }
+            .header h1 { font-size: 32px; }
+            body { padding: 40px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AI Strategy Reports</h1>
+        <p>AI Automation Strategy Presentations & Documents</p>
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <span class="card-badge">LegalAI</span>
+            <h2>AI Marketing Automation for Law Firms</h2>
+            <p>6-Agent Pipeline, $10B+ Market, Path to $1M ARR in 9 Months. Claude API multi-agent pipeline automating the entire marketing funnel for US law firms.</p>
+            <div class="card-links">
+                <a href="/presentation/" class="card-link link-html">Presentation</a>
+                <a href="/presentation/LegalAI-Report.md" class="card-link link-md">Markdown</a>
+                <a href="/presentation/LegalAI-Report.pdf" class="card-link link-pdf">PDF</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="card-badge">Confluence AI</span>
+            <h2>Confluence API 기반 AI 지식 서비스 구축 전략서</h2>
+            <p>Confluence REST API v2 + Azure OpenAI (GPT-4o) + Microsoft Teams Bot. 엔터프라이즈 RAG 파이프라인 기반 사내 지식 어시스턴트 구축 전략.</p>
+            <div class="card-links">
+                <a href="/confluence-strategy/" class="card-link link-html">Presentation</a>
+                <a href="/confluence-strategy/Confluence-AI-Strategy.md" class="card-link link-md">Markdown</a>
+                <a href="/confluence-strategy/Confluence-AI-Strategy.pdf" class="card-link link-pdf">PDF</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        AI Automation Strategy Team | 2025
+    </div>
+</body>
+</html>
