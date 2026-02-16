@@ -3,374 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confluence API 기반 AI 지식 서비스 구축 전략서</title>
+    <title>Confluence AI - 사내 AI 지식 어시스턴트 구축 전략</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-            background: #000;
-            color: #fff;
-            overflow: hidden;
+            background: #000; color: #fff; overflow: hidden;
         }
-
         .presentation-container { width: 100vw; height: 100vh; position: relative; }
-
         .slide {
-            width: 100%; height: 100%;
-            position: absolute; top: 0; left: 0;
-            display: none;
+            width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none;
             background: linear-gradient(135deg, #002c5f 0%, #001a3a 100%);
-            padding: 60px 80px;
+            padding: 55px 75px;
         }
+        .slide.active { display: flex; flex-direction: column; animation: slideIn 0.5s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
 
-        .slide.active {
-            display: flex;
-            flex-direction: column;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* HMG Brand Colors */
-        .hmg-blue { color: #00aad2; }
-        .hmg-green { color: #10b981; }
-        .hmg-red { color: #ef4444; }
-        .hmg-yellow { color: #f59e0b; }
-
-        .slide-header { margin-bottom: 35px; }
-        .slide-number { font-size: 14px; color: #00aad2; margin-bottom: 10px; font-weight: 600; }
-        .slide-title { font-size: 44px; font-weight: 700; color: #fff; margin-bottom: 10px; line-height: 1.2; }
-        .slide-subtitle { font-size: 22px; color: #00aad2; font-weight: 400; }
+        /* HMG Brand */
+        .hmg-logo { position: absolute; top: 35px; right: 75px; font-size: 14px; font-weight: 600; color: #00aad2; letter-spacing: 3px; text-transform: uppercase; }
+        .slide-header { margin-bottom: 30px; }
+        .slide-number { font-size: 13px; color: #00aad2; margin-bottom: 8px; font-weight: 600; letter-spacing: 1px; }
+        .slide-title { font-size: 40px; font-weight: 700; color: #fff; margin-bottom: 8px; line-height: 1.2; }
+        .slide-subtitle { font-size: 20px; color: #00aad2; font-weight: 400; }
         .slide-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 
-        .hmg-logo {
-            position: absolute; top: 40px; right: 80px;
-            font-size: 28px; font-weight: 700; color: #00aad2; letter-spacing: 2px;
-        }
-
         /* Navigation */
-        .navigation {
-            position: fixed; bottom: 40px; right: 80px;
-            display: flex; gap: 15px; z-index: 1000;
-        }
+        .navigation { position: fixed; bottom: 35px; right: 75px; display: flex; gap: 12px; z-index: 1000; }
         .nav-btn {
-            width: 50px; height: 50px; border-radius: 50%;
-            background: rgba(0, 170, 210, 0.2); border: 2px solid #00aad2;
-            color: #00aad2; font-size: 24px; cursor: pointer;
+            width: 46px; height: 46px; border-radius: 50%;
+            background: rgba(0,170,210,0.2); border: 2px solid #00aad2;
+            color: #00aad2; font-size: 22px; cursor: pointer;
             transition: all 0.3s; display: flex; align-items: center; justify-content: center;
         }
         .nav-btn:hover { background: #00aad2; color: #002c5f; transform: scale(1.1); }
-
-        .slide-counter {
-            position: fixed; bottom: 50px; left: 80px;
-            font-size: 16px; color: #00aad2; z-index: 1000;
-        }
-
-        .toolbar {
-            position: fixed; top: 30px; left: 40px;
-            display: flex; gap: 10px; z-index: 1000;
-        }
+        .slide-counter { position: fixed; bottom: 45px; left: 75px; font-size: 15px; color: #00aad2; z-index: 1000; }
+        .toolbar { position: fixed; top: 25px; left: 35px; display: flex; gap: 8px; z-index: 1000; }
         .toolbar-btn {
-            width: 44px; height: 44px; border-radius: 10px;
-            background: rgba(0, 170, 210, 0.15); border: 1.5px solid rgba(0, 170, 210, 0.4);
-            color: #00aad2; font-size: 18px; cursor: pointer;
-            transition: all 0.3s; display: flex; align-items: center; justify-content: center;
-            text-decoration: none;
+            width: 40px; height: 40px; border-radius: 8px;
+            background: rgba(0,170,210,0.12); border: 1.5px solid rgba(0,170,210,0.35);
+            color: #00aad2; font-size: 16px; cursor: pointer;
+            transition: all 0.3s; display: flex; align-items: center; justify-content: center; text-decoration: none;
         }
-        .toolbar-btn:hover {
-            background: rgba(0, 170, 210, 0.3); border-color: #00aad2; transform: scale(1.05);
-        }
+        .toolbar-btn:hover { background: rgba(0,170,210,0.25); border-color: #00aad2; }
 
         /* Layouts */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 35px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
-        .grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
 
         /* Cards */
         .card {
-            background: rgba(255,255,255,0.05); border-left: 4px solid #00aad2;
-            padding: 25px; border-radius: 8px; backdrop-filter: blur(10px); transition: all 0.3s;
+            background: rgba(255,255,255,0.04); border-left: 3px solid #00aad2;
+            padding: 22px; border-radius: 8px; transition: all 0.3s;
         }
-        .card:hover { background: rgba(255,255,255,0.08); transform: translateY(-4px); border-left-color: #4fc3f7; }
-        .card-title { font-size: 20px; font-weight: 700; color: #00aad2; margin-bottom: 12px; }
-        .card-content { font-size: 15px; line-height: 1.7; color: #e0e0e0; }
+        .card:hover { background: rgba(255,255,255,0.07); transform: translateY(-3px); }
+        .card-title { font-size: 18px; font-weight: 700; color: #00aad2; margin-bottom: 10px; }
+        .card-content { font-size: 14px; line-height: 1.7; color: #e0e0e0; }
 
         /* Stats */
         .stats-box {
-            background: rgba(0,170,210,0.1); border: 2px solid #00aad2;
-            padding: 20px 25px; border-radius: 8px; text-align: center;
+            background: rgba(0,170,210,0.1); border: 2px solid rgba(0,170,210,0.4);
+            padding: 18px 22px; border-radius: 8px; text-align: center;
         }
-        .stats-number { font-size: 38px; font-weight: 700; color: #00aad2; margin-bottom: 5px; }
-        .stats-label { font-size: 14px; color: #e0e0e0; }
+        .stats-number { font-size: 36px; font-weight: 700; color: #00aad2; margin-bottom: 4px; }
+        .stats-label { font-size: 13px; color: #e0e0e0; }
 
         /* KPI */
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 20px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
         .kpi-box {
-            background: rgba(0,170,210,0.1); padding: 22px; border-radius: 8px;
-            border-top: 4px solid #00aad2; text-align: center;
+            background: rgba(0,170,210,0.08); padding: 20px; border-radius: 8px;
+            border-top: 3px solid #00aad2; text-align: center;
         }
-        .kpi-value { font-size: 32px; font-weight: 700; color: #00aad2; margin-bottom: 8px; }
-        .kpi-label { font-size: 13px; color: #e0e0e0; }
-
-        /* Architecture Layers */
-        .arch-layer {
-            background: rgba(255,255,255,0.05); padding: 22px; border-radius: 8px;
-            margin-bottom: 16px; border-left: 4px solid #00aad2;
-        }
-        .arch-layer-title { font-size: 18px; font-weight: 700; color: #00aad2; margin-bottom: 8px; }
-        .arch-layer-content { font-size: 15px; color: #e0e0e0; line-height: 1.6; }
+        .kpi-value { font-size: 32px; font-weight: 700; color: #00aad2; margin-bottom: 6px; }
+        .kpi-label { font-size: 12px; color: #e0e0e0; }
 
         /* Table */
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .data-table th {
-            background: rgba(0,170,210,0.2); color: #00aad2; padding: 12px 14px;
-            text-align: left; font-weight: 700; border-bottom: 2px solid #00aad2; font-size: 13px;
+        .table { width: 100%; border-collapse: collapse; }
+        .table th { background: rgba(0,170,210,0.2); color: #00aad2; padding: 12px 16px; font-size: 13px; text-align: left; border-bottom: 2px solid rgba(0,170,210,0.4); }
+        .table td { padding: 11px 16px; font-size: 13px; color: #e0e0e0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .table tr:hover { background: rgba(255,255,255,0.03); }
+
+        /* Tags */
+        .tag {
+            display: inline-block; padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 600; margin-right: 6px; margin-bottom: 6px;
         }
-        .data-table td {
-            padding: 12px 14px; color: #e0e0e0;
-            border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 14px;
-        }
-        .data-table tr:hover { background: rgba(255,255,255,0.05); }
+        .tag-cyan { background: rgba(0,170,210,0.2); color: #00aad2; border: 1px solid rgba(0,170,210,0.4); }
+        .tag-orange { background: rgba(255,107,0,0.2); color: #ff6b00; border: 1px solid rgba(255,107,0,0.4); }
+        .tag-green { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4); }
+        .tag-red { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.4); }
 
         /* Highlight */
         .highlight-box {
-            background: rgba(0,170,210,0.15); border: 2px solid #00aad2;
-            padding: 28px; border-radius: 12px; text-align: center; margin: 25px 0;
+            background: linear-gradient(135deg, rgba(0,170,210,0.12), rgba(0,44,95,0.3));
+            border: 1px solid rgba(0,170,210,0.35); border-radius: 12px;
+            padding: 24px 28px;
         }
-        .highlight-text { font-size: 26px; font-weight: 700; color: #00aad2; line-height: 1.5; }
+        .highlight-text { font-size: 18px; line-height: 1.7; color: #e0e0e0; }
+        .highlight-text strong { color: #00aad2; }
+
+        /* Flow */
+        .flow-container { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .flow-step {
+            background: rgba(0,170,210,0.1); border: 1px solid rgba(0,170,210,0.3);
+            padding: 14px 20px; border-radius: 10px; text-align: center; flex: 1; min-width: 120px;
+        }
+        .flow-step-title { font-size: 14px; font-weight: 700; color: #00aad2; margin-bottom: 4px; }
+        .flow-step-desc { font-size: 11px; color: #e0e0e0; }
+        .flow-arrow { font-size: 20px; color: #00aad2; flex-shrink: 0; }
+
+        /* Timeline */
+        .timeline-item { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 18px; }
+        .timeline-marker {
+            width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+            background: rgba(0,170,210,0.2); border: 2px solid #00aad2;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 700; color: #00aad2;
+        }
+        .timeline-content { flex: 1; }
+        .timeline-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+        .timeline-desc { font-size: 13px; color: #e0e0e0; line-height: 1.5; }
 
         /* Cover */
-        .cover-slide { justify-content: center; align-items: center; text-align: center; }
-        .cover-title { font-size: 52px; font-weight: 700; color: #fff; margin-bottom: 15px; line-height: 1.2; }
-        .cover-subtitle { font-size: 28px; color: #00aad2; margin-bottom: 50px; }
-        .cover-info { font-size: 17px; color: #e0e0e0; margin-top: 70px; }
-
-        /* Pillar Cards */
-        .pillar-card {
-            background: linear-gradient(135deg, rgba(0,170,210,0.1) 0%, rgba(0,44,95,0.2) 100%);
-            border: 2px solid #00aad2; padding: 30px; border-radius: 12px; transition: all 0.3s;
-        }
-        .pillar-card:hover { transform: translateY(-8px); box-shadow: 0 10px 30px rgba(0,170,210,0.3); }
-        .pillar-number { font-size: 56px; font-weight: 700; color: rgba(0,170,210,0.3); margin-bottom: 6px; }
-        .pillar-title { font-size: 24px; font-weight: 700; color: #00aad2; margin-bottom: 14px; }
-        .pillar-desc { font-size: 15px; color: #e0e0e0; line-height: 1.8; }
-
-        /* Bullet Lists */
-        .bullet-list { list-style: none; padding-left: 0; }
-        .bullet-list li {
-            font-size: 16px; line-height: 1.8; color: #e0e0e0;
-            margin-bottom: 10px; padding-left: 28px; position: relative;
-        }
-        .bullet-list li::before {
-            content: "\25B8"; position: absolute; left: 0; color: #00aad2; font-weight: 700;
+        .cover-title { font-size: 54px; font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+        .cover-title .accent { color: #00aad2; }
+        .cover-sub { font-size: 22px; color: #e0e0e0; margin-bottom: 40px; line-height: 1.5; }
+        .cover-stats { display: flex; gap: 50px; }
+        .cover-stat-value { font-size: 40px; font-weight: 700; color: #00aad2; }
+        .cover-stat-label { font-size: 14px; color: #94a3b8; margin-top: 4px; }
+        .cover-badge {
+            display: inline-block; padding: 6px 18px; border-radius: 20px;
+            background: rgba(0,170,210,0.15); border: 1px solid rgba(0,170,210,0.4);
+            color: #00aad2; font-size: 13px; font-weight: 600; margin-bottom: 20px; letter-spacing: 1px;
         }
 
-        /* Pipeline Flow */
-        .pipeline-flow {
-            display: flex; align-items: center; gap: 8px;
-            flex-wrap: wrap; justify-content: center; margin: 18px 0;
+        /* Compare */
+        .compare-box {
+            background: rgba(255,255,255,0.03); border-radius: 12px; padding: 24px;
+            border: 1px solid rgba(255,255,255,0.08);
         }
-        .pipeline-node {
-            background: rgba(255,255,255,0.05); border: 2px solid rgba(0,170,210,0.4);
-            border-radius: 12px; padding: 16px 20px; text-align: center;
-            min-width: 130px; transition: all 0.3s;
-        }
-        .pipeline-node:hover { border-color: #00aad2; transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,170,210,0.2); }
-        .pipeline-arrow { color: #00aad2; font-size: 1.3rem; }
-        .node-icon { font-size: 1.4rem; margin-bottom: 5px; }
-        .node-name { font-size: 0.82rem; font-weight: 600; color: #fff; }
-        .node-sub { font-size: 0.68rem; color: #94a3b8; margin-top: 2px; }
+        .compare-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+        .compare-item { font-size: 14px; color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; line-height: 1.5; }
+        .compare-item::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; }
+        .before-item::before { background: #f87171; }
+        .after-item::before { background: #34d399; }
 
-        /* Code Block */
-        .code-block {
-            background: #0d1117; border: 1px solid #21262d; border-radius: 8px;
-            padding: 16px; font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem; line-height: 1.6; color: #c9d1d9; overflow-x: auto;
+        /* Arch layer */
+        .arch-layer {
+            background: rgba(255,255,255,0.04); padding: 16px 20px; border-radius: 8px;
+            margin-bottom: 10px; border-left: 3px solid #00aad2;
         }
-        .code-key { color: #79c0ff; }
-        .code-str { color: #a5d6ff; }
-        .code-comment { color: #8b949e; }
+        .arch-title { font-size: 15px; font-weight: 700; color: #00aad2; margin-bottom: 4px; }
+        .arch-desc { font-size: 13px; color: #e0e0e0; line-height: 1.5; }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .slide { padding: 40px 50px; }
-            .slide-title { font-size: 34px; }
-            .grid-3, .grid-4 { grid-template-columns: 1fr; }
-            .kpi-grid { grid-template-columns: 1fr 1fr; }
-        }
-
-        @media print {
-            .navigation, .slide-counter { display: none; }
-            .slide { page-break-after: always; display: flex !important; position: relative; height: auto; min-height: 100vh; }
-            body { overflow: visible; }
-        }
+        /* Risk */
+        .risk-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+        .risk-label { font-size: 14px; font-weight: 600; color: #fff; width: 180px; }
+        .risk-bar { flex: 1; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.1); }
+        .risk-fill { height: 100%; border-radius: 4px; }
+        .risk-value { font-size: 13px; color: #e0e0e0; width: 50px; text-align: right; }
     </style>
 </head>
 <body>
     <div class="presentation-container">
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <a href="/" class="toolbar-btn" title="Home">&#8962;</a>
+            <button class="toolbar-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
+        </div>
 
         <!-- Slide 1: Cover -->
-        <div class="slide active cover-slide" data-slide="1">
-            <div class="hmg-logo">HMG</div>
-            <div>
-                <div class="cover-title">Confluence API 기반<br>AI 지식 서비스 구축</div>
-                <div class="cover-subtitle">운영 최적화 전략서</div>
-                <div class="highlight-box" style="max-width: 850px; margin: 50px auto;">
-                    <div class="highlight-text">
-                        Confluence + Azure OpenAI + Teams Bot<br>
-                        엔터프라이즈 RAG 파이프라인
-                    </div>
+        <div class="slide active">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-content" style="justify-content: center;">
+                <div class="cover-badge">CONFLUENCE AI KNOWLEDGE SERVICE</div>
+                <div class="cover-title">
+                    Confluence 기반<br><span class="accent">AI 지식 어시스턴트</span><br>구축 전략
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; max-width: 700px; margin: 30px auto 0;">
-                    <div class="stats-box">
-                        <div class="stats-number">GPT-4o</div>
-                        <div class="stats-label">AI 모델</div>
-                    </div>
-                    <div class="stats-box">
-                        <div class="stats-number">RAG</div>
-                        <div class="stats-label">검색 증강 생성</div>
-                    </div>
-                    <div class="stats-box">
-                        <div class="stats-number">Teams</div>
-                        <div class="stats-label">사용자 인터페이스</div>
-                    </div>
+                <div class="cover-sub">
+                    Confluence REST API v2 + Azure OpenAI (GPT-4o) + Microsoft Teams Bot<br>
+                    엔터프라이즈 RAG 파이프라인 기반 사내 지식 서비스
                 </div>
-                <div class="cover-info">
-                    현대오토에버 AI 전략팀<br>
-                    2025. 02
+                <div class="cover-stats">
+                    <div><div class="cover-stat-value">70%</div><div class="cover-stat-label">검색 시간 단축</div></div>
+                    <div><div class="cover-stat-value">ROI 3.8x</div><div class="cover-stat-label">투자 대비 수익</div></div>
+                    <div><div class="cover-stat-value">GPT-4o</div><div class="cover-stat-label">RAG 엔진</div></div>
+                    <div><div class="cover-stat-value">연 6.2억</div><div class="cover-stat-label">비용 절감</div></div>
                 </div>
             </div>
         </div>
 
         <!-- Slide 2: 프로젝트 배경 -->
-        <div class="slide" data-slide="2">
-            <div class="hmg-logo">HMG</div>
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
             <div class="slide-header">
-                <div class="slide-number">02</div>
+                <div class="slide-number">01 — BACKGROUND</div>
                 <div class="slide-title">프로젝트 배경</div>
-                <div class="slide-subtitle">Why Now?</div>
+                <div class="slide-subtitle">Why Now? 사내 AI 지식 서비스가 필요한 이유</div>
             </div>
             <div class="slide-content">
                 <div class="grid-2">
                     <div>
-                        <h3 style="color: #00aad2; font-size: 22px; margin-bottom: 18px;">환경 변화</h3>
-                        <div class="card" style="margin-bottom: 15px;">
-                            <div class="card-title">외부 AI 서비스 차단</div>
-                            <div class="card-content">2025.08부로 사내 외용 생성형 AI 서비스 차단 조치 시행. 내부 솔루션 필요성 대두</div>
-                        </div>
-                        <div class="card" style="margin-bottom: 15px;">
-                            <div class="card-title">H Chat Pro 성능 격차</div>
-                            <div class="card-content">응답 지연 및 처리 중단 발생. 업무 연속성에 중대한 도전 과제</div>
-                        </div>
-                        <div class="card">
-                            <div class="card-title">전사적 AI 전환</div>
-                            <div class="card-content">지식 자산의 가시화와 활용 속도가 기업 경쟁력 결정</div>
+                        <div class="compare-box">
+                            <div class="compare-title" style="color: #f87171;">현재 문제점</div>
+                            <div class="compare-item before-item">2025.08 사내 외용 생성형 AI 서비스 차단 조치</div>
+                            <div class="compare-item before-item">H Chat Pro 응답 지연 및 처리 중단 발생</div>
+                            <div class="compare-item before-item">Confluence 위키 수동 검색 — 평균 15분/건</div>
+                            <div class="compare-item before-item">지식 사일로 — 부서 간 정보 단절</div>
+                            <div class="compare-item before-item">신규 입사자 온보딩 지식 습득에 2-3주 소요</div>
                         </div>
                     </div>
                     <div>
-                        <h3 style="color: #00aad2; font-size: 22px; margin-bottom: 18px;">솔루션 전략</h3>
-                        <div class="pillar-card" style="margin-bottom: 15px;">
-                            <div class="pillar-number">01</div>
-                            <div class="pillar-title">Confluence REST API v2</div>
-                            <div class="pillar-desc">고정밀 데이터 추출<br>위키 본문, 레이블, 계층 구조</div>
+                        <div class="compare-box">
+                            <div class="compare-title" style="color: #34d399;">솔루션 전략</div>
+                            <div class="compare-item after-item">Confluence REST API v2 — 고정밀 데이터 추출</div>
+                            <div class="compare-item after-item">Azure OpenAI (GPT-4o) — 맞춤형 RAG 파이프라인</div>
+                            <div class="compare-item after-item">Microsoft Teams Bot — 업무 흐름 통합 UX</div>
+                            <div class="compare-item after-item">사내 지식만 활용 — 데이터 주권 확보</div>
+                            <div class="compare-item after-item">즉시 답변 + 출처 명시 — 신뢰성 확보</div>
                         </div>
-                        <div class="pillar-card" style="margin-bottom: 15px;">
-                            <div class="pillar-number">02</div>
-                            <div class="pillar-title">Azure OpenAI (GPT-4o)</div>
-                            <div class="pillar-desc">맞춤형 RAG 파이프라인<br>사실 기반 답변 생성</div>
-                        </div>
-                        <div class="pillar-card">
-                            <div class="pillar-number">03</div>
-                            <div class="pillar-title">Microsoft Teams Bot</div>
-                            <div class="pillar-desc">업무 흐름 통합<br>Seamless UX 제공</div>
-                        </div>
+                    </div>
+                </div>
+                <div class="kpi-grid" style="margin-top: 20px;">
+                    <div class="kpi-box">
+                        <div class="kpi-value">15분</div>
+                        <div class="kpi-label">현재 평균 검색 시간</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-value">68%</div>
+                        <div class="kpi-label">정보 미검색 비율</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-value">2-3주</div>
+                        <div class="kpi-label">온보딩 지식 습득</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-value">수동</div>
+                        <div class="kpi-label">지식 업데이트 추적</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Slide 3: 시스템 아키텍처 -->
-        <div class="slide" data-slide="3">
-            <div class="hmg-logo">HMG</div>
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
             <div class="slide-header">
-                <div class="slide-number">03</div>
+                <div class="slide-number">02 — ARCHITECTURE</div>
                 <div class="slide-title">시스템 아키텍처</div>
-                <div class="slide-subtitle">계층형 마이크로서비스</div>
+                <div class="slide-subtitle">Azure 클라우드 기반 계층형 마이크로서비스</div>
             </div>
             <div class="slide-content">
-                <div class="arch-layer">
-                    <div class="arch-layer-title">Client Layer</div>
-                    <div class="arch-layer-content">Azure Bot Service 기반 Microsoft Teams 봇 &nbsp;&bull;&nbsp; React 기반 Web UI</div>
-                </div>
-                <div class="arch-layer">
-                    <div class="arch-layer-title">API Gateway &mdash; FastAPI (Azure App Service)</div>
-                    <div class="arch-layer-content">모든 요청의 라우팅과 인증 담당 &nbsp;&bull;&nbsp; Python 3.12 + Pydantic v2 &nbsp;&bull;&nbsp; 비동기 처리(Async/Await)</div>
-                </div>
-                <div class="grid-2" style="gap: 16px;">
-                    <div class="arch-layer">
-                        <div class="arch-layer-title">RAG Engine &mdash; LangChain</div>
-                        <div class="arch-layer-content">
-                            &bull; 문서 전처리 및 청킹<br>
-                            &bull; 검색 체인 비동기 처리<br>
-                            &bull; 프롬프트 템플릿 관리
+                <div class="grid-2">
+                    <div>
+                        <div class="arch-layer">
+                            <div class="arch-title">Client Layer</div>
+                            <div class="arch-desc">Azure Bot Service · Microsoft Teams Bot · React Web UI</div>
+                        </div>
+                        <div class="arch-layer">
+                            <div class="arch-title">API Gateway — FastAPI</div>
+                            <div class="arch-desc">Python 3.12 + Pydantic v2 · 비동기(Async/Await) · Azure App Service</div>
+                        </div>
+                        <div class="arch-layer">
+                            <div class="arch-title">RAG Engine — LangChain</div>
+                            <div class="arch-desc">문서 전처리 · 청킹 · 검색 체인 비동기 처리 · 프롬프트 템플릿 관리</div>
+                        </div>
+                        <div class="arch-layer">
+                            <div class="arch-title">Vector Store — Azure AI Search</div>
+                            <div class="arch-desc">벡터 + 메타데이터 필터링 · 하이브리드 검색 · 고성능 인덱싱</div>
+                        </div>
+                        <div class="arch-layer">
+                            <div class="arch-title">AI Model — Azure OpenAI</div>
+                            <div class="arch-desc">GPT-4o (답변 생성) · text-embedding-3-large (3,072D 임베딩)</div>
+                        </div>
+                        <div class="arch-layer">
+                            <div class="arch-title">Data Source — Confluence API v2</div>
+                            <div class="arch-desc">위키 본문 · 레이블 · 계층 구조 · Webhook + 30분 폴링 동기화</div>
                         </div>
                     </div>
-                    <div class="arch-layer">
-                        <div class="arch-layer-title">Vector Store &mdash; Azure AI Search</div>
-                        <div class="arch-layer-content">
-                            &bull; 벡터 + 메타데이터 필터링<br>
-                            &bull; 고성능 검색 엔진<br>
-                            &bull; 하이브리드 검색 지원
-                        </div>
-                    </div>
-                </div>
-                <div class="grid-2" style="gap: 16px;">
-                    <div class="arch-layer">
-                        <div class="arch-layer-title">AI Model Layer &mdash; Azure OpenAI</div>
-                        <div class="arch-layer-content">
-                            <strong>GPT-4o:</strong> 질의응답 생성<br>
-                            <strong>text-embedding-3-large:</strong> 3,072차원 벡터 임베딩
-                        </div>
-                    </div>
-                    <div class="arch-layer">
-                        <div class="arch-layer-title">Data Source &mdash; Confluence API v2</div>
-                        <div class="arch-layer-content">
-                            위키 본문, 레이블, 계층 구조<br>
-                            Webhook + 30분 폴링 동기화
-                        </div>
+                    <div>
+                        <div class="card-title" style="margin-bottom: 14px;">Infrastructure Stack</div>
+                        <table class="table">
+                            <tr><th>Layer</th><th>Technology</th></tr>
+                            <tr><td>Client</td><td>Teams Bot + React Web UI</td></tr>
+                            <tr><td>API Gateway</td><td>FastAPI (Azure App Service)</td></tr>
+                            <tr><td>RAG Engine</td><td>LangChain (Python 3.12)</td></tr>
+                            <tr><td>Vector DB</td><td>Azure AI Search</td></tr>
+                            <tr><td>AI Model</td><td>Azure OpenAI (GPT-4o)</td></tr>
+                            <tr><td>Embedding</td><td>text-embedding-3-large (3,072D)</td></tr>
+                            <tr><td>Data Source</td><td>Confluence REST API v2</td></tr>
+                            <tr><td>Auth</td><td>Azure AD (Entra ID) SSO</td></tr>
+                            <tr><td>Monitoring</td><td>Application Insights + Power BI</td></tr>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 4: API 엔드포인트 -->
-        <div class="slide" data-slide="4">
-            <div class="hmg-logo">HMG</div>
+        <!-- Slide 4: FastAPI 백엔드 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
             <div class="slide-header">
-                <div class="slide-number">04</div>
-                <div class="slide-title">FastAPI 백엔드 설계</div>
-                <div class="slide-subtitle">API 엔드포인트 & Confluence 통합</div>
+                <div class="slide-number">03 — API DESIGN</div>
+                <div class="slide-title">FastAPI 백엔드 & Confluence 통합</div>
+                <div class="slide-subtitle">API 엔드포인트 설계와 데이터 동기화 전략</div>
             </div>
             <div class="slide-content">
                 <div class="grid-2">
                     <div>
-                        <h3 style="color: #00aad2; font-size: 20px; margin-bottom: 15px;">서비스 API</h3>
-                        <table class="data-table">
+                        <div class="card-title" style="margin-bottom: 14px;">서비스 API</div>
+                        <table class="table">
                             <tr><th>메서드</th><th>엔드포인트</th><th>목적</th></tr>
-                            <tr><td style="color: #10b981; font-weight: 700;">POST</td><td>/api/chat</td><td>RAG 기반 지능형 질의응답</td></tr>
-                            <tr><td style="color: #00aad2; font-weight: 700;">GET</td><td>/api/search</td><td>의미론적 검색 및 문서 탐색</td></tr>
-                            <tr><td style="color: #10b981; font-weight: 700;">POST</td><td>/api/index</td><td>스페이스별 인덱싱 및 임베딩</td></tr>
-                            <tr><td style="color: #10b981; font-weight: 700;">POST</td><td>/api/webhook/teams</td><td>Teams 봇 메시지 핸들링</td></tr>
-                            <tr><td style="color: #00aad2; font-weight: 700;">GET</td><td>/api/health</td><td>시스템 상태 모니터링</td></tr>
+                            <tr><td><span class="tag tag-green">POST</span></td><td>/api/chat</td><td>RAG 기반 지능형 질의응답</td></tr>
+                            <tr><td><span class="tag tag-cyan">GET</span></td><td>/api/search</td><td>의미론적 검색 및 문서 탐색</td></tr>
+                            <tr><td><span class="tag tag-green">POST</span></td><td>/api/index</td><td>스페이스별 인덱싱 및 임베딩</td></tr>
+                            <tr><td><span class="tag tag-green">POST</span></td><td>/api/webhook/teams</td><td>Teams 봇 메시지 핸들링</td></tr>
+                            <tr><td><span class="tag tag-cyan">GET</span></td><td>/api/health</td><td>시스템 상태 모니터링</td></tr>
                         </table>
                     </div>
                     <div>
-                        <h3 style="color: #00aad2; font-size: 20px; margin-bottom: 15px;">Confluence API v2 엔드포인트</h3>
-                        <table class="data-table" style="font-size: 13px;">
+                        <div class="card-title" style="margin-bottom: 14px;">Confluence API v2 엔드포인트</div>
+                        <table class="table" style="margin-bottom: 16px;">
                             <tr><th>엔드포인트</th><th>용도</th></tr>
                             <tr><td>GET /wiki/api/v2/spaces</td><td>지식 지도 파악</td></tr>
                             <tr><td>GET /wiki/api/v2/pages</td><td>페이지 메타데이터</td></tr>
@@ -378,12 +331,12 @@
                             <tr><td>GET /pages/{id}/children</td><td>지식 계층 정보</td></tr>
                             <tr><td>GET /pages/{id}/labels</td><td>카테고리 분류</td></tr>
                         </table>
-                        <div class="card" style="margin-top: 15px;">
-                            <div class="card-title" style="font-size: 16px;">동기화 전략</div>
-                            <div class="card-content" style="font-size: 13px;">
-                                1. 초기 전체 크롤링 (Full Crawl)<br>
-                                2. Webhook + 30분 폴링 (Fallback)<br>
-                                3. 청크 단위 부분 재임베딩
+                        <div class="card">
+                            <div class="card-title" style="font-size: 15px;">동기화 전략</div>
+                            <div class="card-content" style="font-size: 12px;">
+                                <strong>1.</strong> 초기 전체 크롤링 (Full Crawl)<br>
+                                <strong>2.</strong> Webhook + 30분 폴링 (Fallback)<br>
+                                <strong>3.</strong> 변경 청크 단위 부분 재임베딩
                             </div>
                         </div>
                     </div>
@@ -392,50 +345,46 @@
         </div>
 
         <!-- Slide 5: RAG 파이프라인 -->
-        <div class="slide" data-slide="5">
-            <div class="hmg-logo">HMG</div>
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
             <div class="slide-header">
-                <div class="slide-number">05</div>
-                <div class="slide-title">RAG 파이프라인</div>
-                <div class="slide-subtitle">Retrieval-Augmented Generation</div>
+                <div class="slide-number">04 — RAG PIPELINE</div>
+                <div class="slide-title">RAG 파이프라인 설계</div>
+                <div class="slide-subtitle">Retrieval-Augmented Generation 상세 아키텍처</div>
             </div>
             <div class="slide-content">
-                <div class="pipeline-flow">
-                    <div class="pipeline-node">
-                        <div class="node-icon">&#x1F4C4;</div>
-                        <div class="node-name">Confluence 수집</div>
-                        <div class="node-sub">REST API v2</div>
-                    </div>
-                    <div class="pipeline-arrow">&#x2192;</div>
-                    <div class="pipeline-node">
-                        <div class="node-icon">&#x2702;&#xFE0F;</div>
-                        <div class="node-name">청킹</div>
-                        <div class="node-sub">1,000 tokens / 200 overlap</div>
-                    </div>
-                    <div class="pipeline-arrow">&#x2192;</div>
-                    <div class="pipeline-node">
-                        <div class="node-icon">&#x1F9E0;</div>
-                        <div class="node-name">임베딩</div>
-                        <div class="node-sub">text-embedding-3-large</div>
-                    </div>
-                    <div class="pipeline-arrow">&#x2192;</div>
-                    <div class="pipeline-node">
-                        <div class="node-icon">&#x1F50D;</div>
-                        <div class="node-name">벡터 검색</div>
-                        <div class="node-sub">Azure AI Search</div>
-                    </div>
-                    <div class="pipeline-arrow">&#x2192;</div>
-                    <div class="pipeline-node">
-                        <div class="node-icon">&#x1F4AC;</div>
-                        <div class="node-name">답변 생성</div>
-                        <div class="node-sub">GPT-4o</div>
+                <div class="highlight-box" style="margin-bottom: 24px;">
+                    <div class="flow-container">
+                        <div class="flow-step">
+                            <div class="flow-step-title">Confluence 수집</div>
+                            <div class="flow-step-desc">REST API v2</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-step-title">청킹</div>
+                            <div class="flow-step-desc">1,000 / 200 overlap</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-step-title">임베딩</div>
+                            <div class="flow-step-desc">text-embedding-3-large</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-step-title">벡터 검색</div>
+                            <div class="flow-step-desc">Azure AI Search</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-step-title">답변 생성</div>
+                            <div class="flow-step-desc">GPT-4o</div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="grid-2" style="margin-top: 25px;">
+                <div class="grid-2">
                     <div>
-                        <h3 style="color: #00aad2; font-size: 20px; margin-bottom: 15px;">청킹 & 임베딩 전략</h3>
-                        <div class="kpi-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="card-title" style="margin-bottom: 14px;">청킹 & 임베딩 파라미터</div>
+                        <div class="kpi-grid" style="grid-template-columns: repeat(2, 1fr);">
                             <div class="kpi-box">
                                 <div class="kpi-value" style="font-size: 28px;">1,000</div>
                                 <div class="kpi-label">Chunk Size (tokens)</div>
@@ -455,18 +404,19 @@
                         </div>
                     </div>
                     <div>
-                        <h3 style="color: #00aad2; font-size: 20px; margin-bottom: 15px;">GPT-4o 프롬프트 제어</h3>
-                        <div class="card">
-                            <div class="card-title" style="font-size: 16px;">시스템 프롬프트 원칙</div>
-                            <div class="card-content" style="font-size: 13px; font-style: italic;">
-                                "귀하는 사내 지식 어시스턴트입니다. 반드시 제공된 Confluence 컨텍스트에만 기반하여 답변하십시오. 답변 시 출처 페이지 제목과 URL을 명시해야 합니다. 만약 컨텍스트에 답변에 필요한 정보가 없다면, 명확히 모른다고 답하십시오."
+                        <div class="card-title" style="margin-bottom: 14px;">GPT-4o 프롬프트 제어</div>
+                        <div class="card" style="margin-bottom: 14px;">
+                            <div class="card-title" style="font-size: 15px;">시스템 프롬프트</div>
+                            <div class="card-content" style="font-size: 12px; font-style: italic;">
+                                "귀하는 사내 지식 어시스턴트입니다. 반드시 제공된 Confluence 컨텍스트에만 기반하여 답변하십시오. 답변 시 출처 페이지 제목과 URL을 명시해야 합니다. 컨텍스트에 정보가 없다면 명확히 모른다고 답하십시오."
                             </div>
                         </div>
-                        <div class="card" style="margin-top: 12px;">
-                            <div class="card-title" style="font-size: 16px;">추론 제어 파라미터</div>
-                            <div class="card-content" style="font-size: 13px;">
+                        <div class="card">
+                            <div class="card-title" style="font-size: 15px;">추론 제어</div>
+                            <div class="card-content" style="font-size: 12px;">
                                 <strong>Temperature 0.1:</strong> 사실적 정확도 최우선<br>
-                                <strong>Max Tokens 2,000:</strong> 충분한 상세 설명 + 출처
+                                <strong>Max Tokens 2,000:</strong> 상세 설명 + 출처<br>
+                                <strong>Top-K 5:</strong> 상위 5개 청크 컨텍스트
                             </div>
                         </div>
                     </div>
@@ -475,330 +425,637 @@
         </div>
 
         <!-- Slide 6: Teams 통합 -->
-        <div class="slide" data-slide="6">
-            <div class="hmg-logo">HMG</div>
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
             <div class="slide-header">
-                <div class="slide-number">06</div>
-                <div class="slide-title">Teams 통합 & UX</div>
-                <div class="slide-subtitle">Seamless 사용자 경험</div>
+                <div class="slide-number">05 — TEAMS UX</div>
+                <div class="slide-title">Teams 통합 & 사용자 경험</div>
+                <div class="slide-subtitle">업무 흐름을 벗어나지 않는 Seamless 지식 검색</div>
             </div>
             <div class="slide-content">
                 <div class="grid-2">
                     <div>
-                        <h3 style="color: #00aad2; font-size: 20px; margin-bottom: 15px;">Teams 봇 핵심 기능</h3>
-                        <div class="card" style="margin-bottom: 12px;">
-                            <div class="card-title" style="font-size: 17px;">자연어 질의응답</div>
-                            <div class="card-content" style="font-size: 14px;">Bot Framework SDK 활용. Adaptive Cards를 통해 정제된 답변과 시각화된 출처 링크 제공</div>
+                        <div class="card" style="margin-bottom: 14px;">
+                            <div class="card-title">자연어 질의응답</div>
+                            <div class="card-content">Bot Framework SDK 활용. Adaptive Cards로 정제된 답변과 출처 링크 제공. 마크다운 포맷 지원.</div>
                         </div>
-                        <div class="card" style="margin-bottom: 12px;">
-                            <div class="card-title" style="font-size: 17px;">슬래시 명령어</div>
-                            <div class="card-content" style="font-size: 14px;"><code style="color: #00aad2;">/filter [Space_Key]</code> &mdash; 특정 프로젝트/부서의 지식 범위 내 검색 제한</div>
+                        <div class="card" style="margin-bottom: 14px;">
+                            <div class="card-title">슬래시 명령어</div>
+                            <div class="card-content"><code style="color: #00aad2;">/filter [Space_Key]</code> — 특정 프로젝트/부서 범위 내 검색 제한. 스페이스 기반 스코핑.</div>
                         </div>
-                        <div class="card" style="margin-bottom: 12px;">
-                            <div class="card-title" style="font-size: 17px;">멀티턴 대화</div>
-                            <div class="card-content" style="font-size: 14px;">대화 문맥(Context) 유지. 연속된 질문에 매끄러운 답변 제공</div>
+                        <div class="card" style="margin-bottom: 14px;">
+                            <div class="card-title">멀티턴 대화</div>
+                            <div class="card-content">대화 문맥(Context) 유지. 연속 질문에 매끄러운 답변. 세션 기반 히스토리 관리.</div>
                         </div>
                         <div class="card">
-                            <div class="card-title" style="font-size: 17px;">피드백 루프</div>
-                            <div class="card-content" style="font-size: 14px;">'도움됨/도움되지 않음' 버튼 배치. 답변 품질 정량 평가</div>
+                            <div class="card-title">피드백 루프</div>
+                            <div class="card-content">'도움됨/도움되지 않음' 버튼. 답변 품질 정량 평가 → 프롬프트 최적화 데이터 수집.</div>
                         </div>
                     </div>
                     <div>
-                        <h3 style="color: #00aad2; font-size: 20px; margin-bottom: 15px;">인터랙션 플로우</h3>
-                        <div class="arch-layer">
-                            <div class="arch-layer-title">1. 사용자 질의</div>
-                            <div class="arch-layer-content">Teams 채팅에서 자연어 질문 입력</div>
+                        <div class="card-title" style="margin-bottom: 14px;">인터랙션 플로우</div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">사용자 질의</div>
+                                <div class="timeline-desc">Teams 채팅에서 자연어 질문 입력</div>
+                            </div>
                         </div>
-                        <div class="arch-layer">
-                            <div class="arch-layer-title">2. 의미론적 검색</div>
-                            <div class="arch-layer-content">Azure AI Search에서 관련 문서 청크 검색</div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">의미론적 검색</div>
+                                <div class="timeline-desc">Azure AI Search에서 관련 문서 청크 검색 (Top-K 5)</div>
+                            </div>
                         </div>
-                        <div class="arch-layer">
-                            <div class="arch-layer-title">3. GPT-4o 답변 생성</div>
-                            <div class="arch-layer-content">검색 결과 + 시스템 프롬프트 기반 답변</div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">GPT-4o 답변 생성</div>
+                                <div class="timeline-desc">검색 결과 + 시스템 프롬프트 기반 답변 생성</div>
+                            </div>
                         </div>
-                        <div class="arch-layer">
-                            <div class="arch-layer-title">4. Adaptive Card 응답</div>
-                            <div class="arch-layer-content">답변 본문 + 출처 링크 + 피드백 버튼</div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Adaptive Card 응답</div>
+                                <div class="timeline-desc">답변 본문 + 출처 링크 + 피드백 버튼</div>
+                            </div>
                         </div>
-                        <div class="arch-layer">
-                            <div class="arch-layer-title">5. 피드백 수집</div>
-                            <div class="arch-layer-content">사용자 만족도 → 품질 개선 데이터</div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">5</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">피드백 수집</div>
+                                <div class="timeline-desc">사용자 만족도 → 품질 개선 데이터 축적</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 7: 운영 최적화 -->
-        <div class="slide" data-slide="7">
-            <div class="hmg-logo">HMG</div>
+        <!-- Slide 7: 활용 시나리오 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
             <div class="slide-header">
-                <div class="slide-number">07</div>
+                <div class="slide-number">06 — USE CASES</div>
+                <div class="slide-title">핵심 활용 시나리오</div>
+                <div class="slide-subtitle">AI 지식 어시스턴트가 해결하는 업무 유형</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div>
+                        <div class="card" style="margin-bottom: 14px;">
+                            <div class="card-title">사내 정책/규정 검색</div>
+                            <div class="card-content">
+                                <strong>Before:</strong> 15분 (수동 위키 검색) → <strong>After:</strong> 30초 <span class="tag tag-green">97% 절감</span><br>
+                                HR 정책, 보안 규정, 업무 가이드를 자연어로 즉시 검색. 출처 페이지 URL 자동 제공.
+                            </div>
+                        </div>
+                        <div class="card" style="margin-bottom: 14px;">
+                            <div class="card-title">기술 문서 질의응답</div>
+                            <div class="card-content">
+                                <strong>Before:</strong> 20분 (문서 탐색) → <strong>After:</strong> 1분 <span class="tag tag-green">95% 절감</span><br>
+                                API 문서, 아키텍처 설명, 트러블슈팅 가이드를 대화형으로 검색.
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">프로젝트 지식 공유</div>
+                            <div class="card-content">
+                                <strong>Before:</strong> 동료 문의 대기 → <strong>After:</strong> 즉시 답변 <span class="tag tag-green">자동화</span><br>
+                                프로젝트 히스토리, 의사결정 배경, 기술 선택 이유를 즉시 파악.
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card" style="margin-bottom: 14px;">
+                            <div class="card-title">신규 입사자 온보딩</div>
+                            <div class="card-content">
+                                <strong>Before:</strong> 2-3주 → <strong>After:</strong> 3-5일 <span class="tag tag-green">75% 단축</span><br>
+                                조직 구조, 업무 프로세스, 시스템 사용법을 AI가 멘토처럼 안내.
+                            </div>
+                        </div>
+                        <div class="card" style="margin-bottom: 14px;">
+                            <div class="card-title">부서 간 지식 연결</div>
+                            <div class="card-content">
+                                <strong>Before:</strong> 사일로 → <strong>After:</strong> 통합 검색 <span class="tag tag-green">사일로 해소</span><br>
+                                멀티 스페이스 검색으로 부서 간 정보 단절 해소. 크로스 팀 협업 촉진.
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">변경 사항 추적</div>
+                            <div class="card-content">
+                                <strong>Before:</strong> 수동 추적/누락 → <strong>After:</strong> 자동 알림 <span class="tag tag-green">누락 Zero</span><br>
+                                중요 문서 변경 시 자동 감지 → 관련자에게 Teams 알림 → 영향 분석 제공.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: 운영 최적화 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">07 — OPERATIONS</div>
                 <div class="slide-title">운영 최적화 프레임워크</div>
-                <div class="slide-subtitle">4대 평가 차원 & Action Plan</div>
+                <div class="slide-subtitle">VEQG 4대 평가 차원과 Action Plan</div>
             </div>
             <div class="slide-content">
-                <div class="grid-4">
-                    <div class="pillar-card">
-                        <div class="pillar-number">V</div>
-                        <div class="pillar-title">Volume</div>
-                        <div class="pillar-desc">
-                            BU/팀별 세션 수<br>
-                            쿼리 빈도 분석<br>
-                            도입 성숙도 측정
-                        </div>
+                <div class="grid-4" style="margin-bottom: 20px;">
+                    <div class="card" style="border-left-color: #34d399;">
+                        <div class="card-title" style="color: #34d399;">V — Volume</div>
+                        <div class="card-content">BU/팀별 세션 수 · 쿼리 빈도 분석 · 도입 성숙도 측정</div>
                     </div>
-                    <div class="pillar-card">
-                        <div class="pillar-number">E</div>
-                        <div class="pillar-title">Efficiency</div>
-                        <div class="pillar-desc">
-                            응답 성공률 vs 토큰<br>
-                            API Latency 모니터링<br>
-                            Dwell Time 분석
-                        </div>
+                    <div class="card" style="border-left-color: #60a5fa;">
+                        <div class="card-title" style="color: #60a5fa;">E — Efficiency</div>
+                        <div class="card-content">응답 성공률 vs 토큰 · API Latency · Dwell Time 분석</div>
                     </div>
-                    <div class="pillar-card">
-                        <div class="pillar-number">Q</div>
-                        <div class="pillar-title">Quality</div>
-                        <div class="pillar-desc">
-                            사용자 만족도 점수<br>
-                            이상치 탐지(Outlier)<br>
-                            품질 저하 구간 식별
-                        </div>
+                    <div class="card" style="border-left-color: #ff6b00;">
+                        <div class="card-title" style="color: #ff6b00;">Q — Quality</div>
+                        <div class="card-content">사용자 만족도 점수 · 이상치 탐지 · 품질 저하 구간 식별</div>
                     </div>
-                    <div class="pillar-card">
-                        <div class="pillar-number">G</div>
-                        <div class="pillar-title">Growth</div>
-                        <div class="pillar-desc">
-                            WAU/MAU 추이<br>
-                            서비스 확산 전략<br>
-                            사용 패턴 변화
-                        </div>
+                    <div class="card" style="border-left-color: #a78bfa;">
+                        <div class="card-title" style="color: #a78bfa;">G — Growth</div>
+                        <div class="card-content">WAU/MAU 추이 · 서비스 확산 전략 · 사용 패턴 변화</div>
                     </div>
                 </div>
-                <div class="grid-2" style="margin-top: 25px;">
+                <div class="grid-2">
                     <div class="card">
-                        <div class="card-title">단기 (0-3개월)</div>
-                        <ul class="bullet-list">
-                            <li>조직 특화 프롬프트 템플릿 배포</li>
-                            <li>지연 시간 개선을 위한 캐싱 최적화</li>
-                            <li>주간 사용량 모니터링 체계 가동</li>
-                        </ul>
+                        <div class="card-title">단기 Action Plan (0-3개월)</div>
+                        <div class="card-content">
+                            조직 특화 프롬프트 템플릿 배포 · 지연 시간 개선 캐싱 최적화 · 주간 사용량 모니터링 체계 · 답변 품질 베이스라인 설정
+                        </div>
                     </div>
                     <div class="card">
-                        <div class="card-title">중기 (3-6개월)</div>
-                        <ul class="bullet-list">
-                            <li>부서별 토큰 예산 할당 및 최적화</li>
-                            <li>사용량 기반 맞춤형 교육 프로그램</li>
-                            <li>경영진 보고용 KPI 대시보드 (Power BI)</li>
-                        </ul>
+                        <div class="card-title">중기 Action Plan (3-6개월)</div>
+                        <div class="card-content">
+                            부서별 토큰 예산 할당 · 사용량 기반 맞춤형 교육 · 경영진 보고용 KPI 대시보드 (Power BI) · 프롬프트 A/B 테스트
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 8: 보안 거버넌스 -->
-        <div class="slide" data-slide="8">
-            <div class="hmg-logo">HMG</div>
+        <!-- Slide 9: 보안 거버넌스 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
             <div class="slide-header">
-                <div class="slide-number">08</div>
+                <div class="slide-number">08 — SECURITY</div>
                 <div class="slide-title">보안 및 거버넌스</div>
-                <div class="slide-subtitle">엔터프라이즈 보안 체계</div>
+                <div class="slide-subtitle">엔터프라이즈 3중 보안 체계</div>
             </div>
             <div class="slide-content">
-                <div class="grid-3">
-                    <div class="pillar-card">
-                        <div class="pillar-number">01</div>
-                        <div class="pillar-title">Managed Identity</div>
-                        <div class="pillar-desc">
-                            코드 내 자격 증명 노출 원천 차단<br>
-                            API Key 의존 탈피<br>
-                            Production Standard 인증
+                <div class="grid-3" style="margin-bottom: 20px;">
+                    <div class="card" style="border-left-color: #34d399;">
+                        <div class="card-title" style="color: #34d399;">Managed Identity</div>
+                        <div class="card-content">
+                            코드 내 자격 증명 노출 원천 차단. API Key 의존 탈피. Azure 네이티브 인증으로 Production Standard 보안.
                         </div>
                     </div>
-                    <div class="pillar-card">
-                        <div class="pillar-number">02</div>
-                        <div class="pillar-title">인프라 보안</div>
-                        <div class="pillar-desc">
-                            Azure AD (Entra ID) SSO<br>
-                            Role-based Access Control<br>
-                            네트워크 격리 (VNet)
+                    <div class="card" style="border-left-color: #60a5fa;">
+                        <div class="card-title" style="color: #60a5fa;">인프라 보안</div>
+                        <div class="card-content">
+                            Azure AD (Entra ID) SSO. Role-based Access Control (RBAC). 네트워크 격리 (VNet). TLS 1.3 암호화.
                         </div>
                     </div>
-                    <div class="pillar-card">
-                        <div class="pillar-number">03</div>
-                        <div class="pillar-title">콘텐츠 감사</div>
-                        <div class="pillar-desc">
-                            Azure OpenAI 콘텐츠 필터링<br>
-                            전체 질의 Audit Log<br>
-                            데이터 거버넌스 준수
+                    <div class="card" style="border-left-color: #ff6b00;">
+                        <div class="card-title" style="color: #ff6b00;">콘텐츠 감사</div>
+                        <div class="card-content">
+                            Azure OpenAI 콘텐츠 필터링. 전체 질의 Audit Log 저장. 데이터 거버넌스 준수. DLP 정책 적용.
                         </div>
                     </div>
                 </div>
-                <div class="highlight-box" style="margin-top: 30px;">
-                    <div class="highlight-text">
-                        보안 원칙: Zero Trust &middot; 최소 권한 &middot; 감사 추적성
+                <div class="grid-2">
+                    <div>
+                        <div class="card-title" style="margin-bottom: 14px;">보안 레이어 강도</div>
+                        <div class="risk-row">
+                            <div class="risk-label">인증 (Entra ID)</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:100%; background: #34d399;"></div></div>
+                            <div class="risk-value" style="color: #34d399;">완전</div>
+                        </div>
+                        <div class="risk-row">
+                            <div class="risk-label">네트워크 격리</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:100%; background: #34d399;"></div></div>
+                            <div class="risk-value" style="color: #34d399;">VNet</div>
+                        </div>
+                        <div class="risk-row">
+                            <div class="risk-label">데이터 암호화</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:100%; background: #34d399;"></div></div>
+                            <div class="risk-value" style="color: #34d399;">TLS</div>
+                        </div>
+                        <div class="risk-row">
+                            <div class="risk-label">콘텐츠 필터링</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:95%; background: #00aad2;"></div></div>
+                            <div class="risk-value" style="color: #00aad2;">자동</div>
+                        </div>
+                        <div class="risk-row">
+                            <div class="risk-label">감사 로깅</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:100%; background: #34d399;"></div></div>
+                            <div class="risk-value" style="color: #34d399;">완전</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="highlight-box">
+                            <div class="highlight-text" style="font-size: 16px;">
+                                <strong>보안 원칙</strong><br><br>
+                                <strong>Zero Trust</strong> — 모든 요청을 검증<br>
+                                <strong>최소 권한</strong> — 필요한 접근만 허용<br>
+                                <strong>감사 추적성</strong> — 모든 질의/답변 로그<br>
+                                <strong>데이터 주권</strong> — 사내 데이터만 활용
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 9: 기대 효과 -->
-        <div class="slide" data-slide="9">
-            <div class="hmg-logo">HMG</div>
+        <!-- Slide 10: ROI 분석 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
             <div class="slide-header">
-                <div class="slide-number">09</div>
-                <div class="slide-title">기대 효과</div>
-                <div class="slide-subtitle">3대 핵심 성과</div>
+                <div class="slide-number">09 — ROI</div>
+                <div class="slide-title">ROI 분석</div>
+                <div class="slide-subtitle">지식 검색 자동화의 비용 절감 효과</div>
             </div>
             <div class="slide-content">
-                <div class="grid-3">
-                    <div class="pillar-card">
-                        <div class="pillar-number">01</div>
-                        <div class="pillar-title">비용 효율성</div>
-                        <div class="pillar-desc">
-                            조직별 사용량 분석을 통한<br>
-                            토큰 비용 최적화<br><br>
-                            불필요한 검색 시간 단축<br>
-                            부서별 예산 관리 체계
+                <div class="grid-2">
+                    <div>
+                        <table class="table" style="margin-bottom: 16px;">
+                            <thead>
+                                <tr><th>항목</th><th>Before</th><th>After</th><th>절감</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>정책/규정 검색</td><td>2.1억원</td><td>0.3억원</td><td style="color:#34d399">1.8억원</td></tr>
+                                <tr><td>기술 문서 검색</td><td>1.8억원</td><td>0.2억원</td><td style="color:#34d399">1.6억원</td></tr>
+                                <tr><td>온보딩 비용</td><td>1.2억원</td><td>0.3억원</td><td style="color:#34d399">0.9억원</td></tr>
+                                <tr><td>부서 간 문의</td><td>1.5억원</td><td>0.3억원</td><td style="color:#34d399">1.2억원</td></tr>
+                                <tr><td>지식 업데이트 관리</td><td>0.8억원</td><td>0.1억원</td><td style="color:#34d399">0.7억원</td></tr>
+                                <tr style="background:rgba(0,170,210,0.1);"><td><strong>합계</strong></td><td><strong>7.4억원</strong></td><td><strong>1.2억원</strong></td><td style="color:#34d399"><strong>6.2억원</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <div class="kpi-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 20px;">
+                            <div class="kpi-box">
+                                <div class="kpi-value">70%</div>
+                                <div class="kpi-label">검색 시간 절감</div>
+                            </div>
+                            <div class="kpi-box">
+                                <div class="kpi-value">3.8x</div>
+                                <div class="kpi-label">투자 대비 ROI</div>
+                            </div>
+                            <div class="kpi-box">
+                                <div class="kpi-value">7개월</div>
+                                <div class="kpi-label">투자 회수 기간</div>
+                            </div>
+                            <div class="kpi-box">
+                                <div class="kpi-value">6.2억</div>
+                                <div class="kpi-label">연간 순 절감</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="pillar-card">
-                        <div class="pillar-number">02</div>
-                        <div class="pillar-title">생산성 극대화</div>
-                        <div class="pillar-desc">
-                            기존 서비스 응답 지연 해결<br>
-                            실시간 지식 어시스턴트<br><br>
-                            지식 검색 시간<br>
-                            <strong style="color: #00aad2;">평균 70% 단축</strong>
+                        <div class="highlight-box">
+                            <div class="highlight-text" style="font-size: 15px;">
+                                <strong>정성적 효과</strong><br>
+                                직원 만족도 향상 (정보 접근성) · 온보딩 가속화 (75% 단축) · 부서 간 사일로 해소 · 지식 자산 가시화
+                            </div>
                         </div>
-                    </div>
-                    <div class="pillar-card">
-                        <div class="pillar-number">03</div>
-                        <div class="pillar-title">데이터 주권 확보</div>
-                        <div class="pillar-desc">
-                            외부 AI 차단 환경에서<br>
-                            내부 지식만 활용<br><br>
-                            안전하고 신뢰할 수 있는<br>
-                            <strong style="color: #00aad2;">엔터프라이즈 AI 서비스</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <h3 style="color: #00aad2; font-size: 20px; margin: 30px 0 15px;">3대 핵심 성공 요인 (KSF)</h3>
-                <div class="grid-3">
-                    <div class="card">
-                        <div class="card-title" style="font-size: 16px;">기술적 무결성</div>
-                        <div class="card-content" style="font-size: 13px;">Python 3.12 비동기 아키텍처와 고성능 RAG 파이프라인의 안정적 운영</div>
-                    </div>
-                    <div class="card">
-                        <div class="card-title" style="font-size: 16px;">사용자 경험 최적화</div>
-                        <div class="card-content" style="font-size: 13px;">Teams와의 긴밀한 통합 및 피드백 기반의 지속적 답변 품질 고도화</div>
-                    </div>
-                    <div class="card">
-                        <div class="card-title" style="font-size: 16px;">데이터 거버넌스</div>
-                        <div class="card-content" style="font-size: 13px;">Managed Identity 및 감사 로그를 통한 보안 요구사항 완벽 준수</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 10: Closing -->
-        <div class="slide" data-slide="10">
-            <div class="hmg-logo">HMG</div>
+        <!-- Slide 11: 비용 구조 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
             <div class="slide-header">
-                <div class="slide-number">10</div>
-                <div class="slide-title">실행 로드맵</div>
+                <div class="slide-number">10 — COST</div>
+                <div class="slide-title">비용 구조</div>
+                <div class="slide-subtitle">연간 운영 비용과 Azure 서비스 비용 상세</div>
             </div>
-            <div class="slide-content" style="justify-content: center; align-items: center; text-align: center;">
-                <div class="highlight-box" style="max-width: 900px; margin: 0 auto; padding: 50px;">
-                    <div style="font-size: 40px; font-weight: 700; color: #fff; margin-bottom: 35px;">
-                        지식 기반의 일하는 방식을<br>
-                        혁신합니다
-                    </div>
-                    <div style="font-size: 20px; color: #4fc3f7; line-height: 1.8; margin-bottom: 35px;">
-                        Confluence 위키의 지식을 실시간으로 활용<br>
-                        Teams에서 벗어나지 않는 Seamless 경험<br>
-                        보안과 거버넌스가 검증된 엔터프라이즈 AI
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-top: 35px;">
-                        <div>
-                            <div style="font-size: 36px; font-weight: 700; color: #00aad2;">Phase 1</div>
-                            <div style="font-size: 14px; color: #e0e0e0;">MVP 구축<br>핵심 RAG + Teams 봇</div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div>
+                        <div class="card-title" style="margin-bottom: 14px;">연간 운영 비용</div>
+                        <table class="table" style="margin-bottom: 20px;">
+                            <thead>
+                                <tr><th>항목</th><th>비용</th><th>비율</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Azure OpenAI (GPT-4o)</td><td>0.7억원</td><td>44%</td></tr>
+                                <tr><td>Azure AI Search</td><td>0.3억원</td><td>19%</td></tr>
+                                <tr><td>Azure App Service</td><td>0.2억원</td><td>12%</td></tr>
+                                <tr><td>운영 인력 (2명)</td><td>0.2억원</td><td>12%</td></tr>
+                                <tr><td>모니터링/보안</td><td>0.1억원</td><td>7%</td></tr>
+                                <tr><td>교육/온보딩</td><td>0.1억원</td><td>6%</td></tr>
+                                <tr style="background:rgba(0,170,210,0.1);"><td><strong>합계</strong></td><td><strong>1.6억원</strong></td><td><strong>100%</strong></td></tr>
+                            </tbody>
+                        </table>
+                        <div class="highlight-box">
+                            <div class="highlight-text" style="font-size: 16px;">
+                                투자 <strong>1.6억</strong> → 절감 <strong>6.2억</strong> = <strong>ROI 3.8x</strong>
+                            </div>
                         </div>
-                        <div>
-                            <div style="font-size: 36px; font-weight: 700; color: #00aad2;">Phase 2</div>
-                            <div style="font-size: 14px; color: #e0e0e0;">운영 최적화<br>KPI 대시보드 + 피드백</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 36px; font-weight: 700; color: #10b981;">Phase 3</div>
-                            <div style="font-size: 14px; color: #e0e0e0;">전사 확산<br>멀티 스페이스 + Agent</div>
+                    </div>
+                    <div>
+                        <div class="card-title" style="margin-bottom: 14px;">Azure 서비스 월간 비용 (예상)</div>
+                        <table class="table" style="margin-bottom: 20px;">
+                            <thead>
+                                <tr><th>서비스</th><th>Tier</th><th>월 비용</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Azure OpenAI</td><td>GPT-4o Standard</td><td>$4,500</td></tr>
+                                <tr><td>Azure AI Search</td><td>Standard S1</td><td>$750</td></tr>
+                                <tr><td>App Service</td><td>P2v3</td><td>$300</td></tr>
+                                <tr><td>Azure Bot Service</td><td>Standard</td><td>$50</td></tr>
+                                <tr><td>Application Insights</td><td>Standard</td><td>$100</td></tr>
+                                <tr style="background:rgba(0,170,210,0.1);"><td><strong>합계</strong></td><td></td><td><strong>$5,700</strong></td></tr>
+                            </tbody>
+                        </table>
+                        <div class="card">
+                            <div class="card-title">비용 최적화 전략</div>
+                            <div class="card-content">
+                                <strong>프롬프트 캐싱:</strong> 반복 질의 패턴 캐시<br>
+                                <strong>토큰 예산 관리:</strong> 부서별 월간 상한<br>
+                                <strong>임베딩 재사용:</strong> 변경분만 재임베딩<br>
+                                <strong>GPT-4o-mini:</strong> 단순 질의 자동 라우팅
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div style="margin-top: 45px; font-size: 15px; color: #94a3b8;">
-                    Confluence API 기반 AI 지식 서비스 &mdash; 현대오토에버 AI 전략팀
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Toolbar -->
-    <div class="toolbar">
-        <a href="/index.html" class="toolbar-btn" title="Home">&#x1F3E0;</a>
-        <button class="toolbar-btn" id="fullscreen-btn" title="Fullscreen">&#x26F6;</button>
+        <!-- Slide 12: 리스크 관리 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">11 — RISK</div>
+                <div class="slide-title">리스크 관리</div>
+                <div class="slide-subtitle">예상 리스크와 완화 전략</div>
+            </div>
+            <div class="slide-content">
+                <table class="table" style="margin-bottom: 20px;">
+                    <thead>
+                        <tr><th style="width:18%">리스크</th><th style="width:8%">확률</th><th style="width:8%">영향</th><th style="width:66%">완화 전략</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color:#f87171">AI 환각 (Hallucination)</strong></td>
+                            <td><span class="tag tag-red">높음</span></td>
+                            <td><span class="tag tag-red">높음</span></td>
+                            <td>RAG 기반 사실 검증 + Temperature 0.1 + 출처 명시 필수 + "모른다" 응답 허용</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#ff6b00">기밀 정보 노출</strong></td>
+                            <td><span class="tag tag-orange">중간</span></td>
+                            <td><span class="tag tag-red">높음</span></td>
+                            <td>스페이스별 접근 제어 + RBAC + 기밀 등급 분류 + DLP 정책 + 콘텐츠 필터링</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#ff6b00">데이터 동기화 지연</strong></td>
+                            <td><span class="tag tag-orange">중간</span></td>
+                            <td><span class="tag tag-cyan">중간</span></td>
+                            <td>Webhook 실시간 + 30분 폴링 Fallback + 동기화 상태 모니터링 대시보드</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">API 비용 초과</strong></td>
+                            <td><span class="tag tag-cyan">중간</span></td>
+                            <td><span class="tag tag-cyan">중간</span></td>
+                            <td>부서별 토큰 예산 + 프롬프트 캐싱 + GPT-4o-mini 자동 라우팅 + 월간 상한</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">사용자 저항</strong></td>
+                            <td><span class="tag tag-cyan">낮음</span></td>
+                            <td><span class="tag tag-cyan">중간</span></td>
+                            <td>Teams 기반 Seamless UX + 파일럿 성공 사례 공유 + 챔피언 사용자 육성</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="highlight-box">
+                    <div class="highlight-text" style="font-size: 15px;">
+                        <strong>핵심 원칙:</strong> AI 답변에는 반드시 <strong>출처(Confluence 페이지 URL)</strong>를 명시. 컨텍스트에 없는 정보는 <strong>"해당 정보를 찾을 수 없습니다"</strong>로 응답. 모든 질의/답변은 <strong>감사 로그</strong>에 저장.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: 4단계 롤아웃 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">12 — ROLLOUT</div>
+                <div class="slide-title">4단계 롤아웃 전략</div>
+                <div class="slide-subtitle">MVP에서 전사 플랫폼까지 단계적 확산</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">P1</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">MVP 구축 (1-3개월) <span class="tag tag-cyan">Core</span></div>
+                                <div class="timeline-desc">
+                                    1개 부서 (20명) · 핵심 RAG + Teams Bot<br>
+                                    기술 문서 1개 스페이스 대상<br>
+                                    목표: 일 50건 질의 처리, 만족도 >3.5
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">P2</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">운영 최적화 (4-6개월) <span class="tag tag-green">Optimize</span></div>
+                                <div class="timeline-desc">
+                                    3개 부서 (60명) · KPI 대시보드 + 피드백 루프<br>
+                                    프롬프트 A/B 테스트 · 토큰 예산 관리<br>
+                                    목표: 일 200건 처리, 만족도 >4.0
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">P3</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">전사 확산 (7-12개월) <span class="tag tag-orange">Scale</span></div>
+                                <div class="timeline-desc">
+                                    전 부서 (200명+) · 멀티 스페이스 지원<br>
+                                    부서별 커스텀 프롬프트 · 변경 알림 자동화<br>
+                                    목표: 일 500건 처리, 검색 시간 70% 절감
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">P4</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">AI Agent 확장 (12개월+) <span class="tag tag-red">Advanced</span></div>
+                                <div class="timeline-desc">
+                                    그룹사 확대 · AI Agent 기능 추가<br>
+                                    문서 자동 생성 · 지식 그래프 · 다국어 지원<br>
+                                    목표: 전사 AI 지식 플랫폼
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kpi-grid" style="margin-top: 20px;">
+                    <div class="kpi-box">
+                        <div class="kpi-value">20명</div>
+                        <div class="kpi-label">P1: MVP</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-value">60명</div>
+                        <div class="kpi-label">P2: 최적화</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-value">200+명</div>
+                        <div class="kpi-label">P3: 전사</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-value">그룹사</div>
+                        <div class="kpi-label">P4: 확장</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: 90일 로드맵 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">13 — ROADMAP</div>
+                <div class="slide-title">90일 실행 로드맵</div>
+                <div class="slide-subtitle">인프라 구축부터 MVP 운영까지</div>
+            </div>
+            <div class="slide-content">
+                <table class="table" style="margin-bottom: 20px;">
+                    <thead>
+                        <tr><th>주차</th><th>목표</th><th>산출물</th><th>성공 기준</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color:#00aad2">1-2</strong></td>
+                            <td>Azure 인프라 구축</td>
+                            <td>OpenAI, AI Search, App Service 배포, Entra ID 연동</td>
+                            <td>보안팀 검증 통과</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">3-4</strong></td>
+                            <td>RAG 파이프라인 v0.1</td>
+                            <td>Confluence 크롤링 + 임베딩 + 벡터 검색 + GPT-4o 연동</td>
+                            <td>답변 정확도 >80%</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">5-6</strong></td>
+                            <td>Teams Bot 개발</td>
+                            <td>자연어 질의 + Adaptive Card 응답 + 피드백 버튼</td>
+                            <td>E2E 플로우 동작</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">7-8</strong></td>
+                            <td>파일럿 시작</td>
+                            <td>1개 부서 온보딩, 기술 문서 스페이스 대상</td>
+                            <td>일 30건 처리</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">9-10</strong></td>
+                            <td>품질 최적화</td>
+                            <td>피드백 반영, 프롬프트 튜닝, 청킹 전략 조정</td>
+                            <td>만족도 >3.5</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">11-12</strong></td>
+                            <td>MVP 안정화</td>
+                            <td>운영 매뉴얼, 모니터링 대시보드, 확장 계획</td>
+                            <td>일 50건, 만족도 >4.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="grid-3">
+                    <div class="stats-box">
+                        <div class="stats-number">4주</div>
+                        <div class="stats-label">RAG 파이프라인 완성</div>
+                    </div>
+                    <div class="stats-box">
+                        <div class="stats-number">8주</div>
+                        <div class="stats-label">파일럿 시작</div>
+                    </div>
+                    <div class="stats-box">
+                        <div class="stats-number">12주</div>
+                        <div class="stats-label">MVP 안정화</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Closing -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-content" style="justify-content: center; text-align: center; align-items: center;">
+                <div class="cover-badge">CONFLUENCE AI KNOWLEDGE SERVICE</div>
+                <div class="cover-title" style="font-size: 46px;">
+                    지식 기반의 일하는 방식을<br><span class="accent">혁신합니다</span>
+                </div>
+                <div style="font-size: 20px; color: #e0e0e0; line-height: 1.7; margin-bottom: 40px; max-width: 700px;">
+                    Confluence의 지식을 실시간으로 활용하고,<br>
+                    Teams에서 벗어나지 않는 Seamless 경험을 제공합니다.
+                </div>
+                <div class="grid-3" style="max-width: 600px; gap: 30px;">
+                    <div>
+                        <div style="font-size: 32px; font-weight: 700; color: #00aad2; margin-bottom: 4px;">4주</div>
+                        <div style="font-size: 13px; color: #94a3b8;">RAG 파이프라인</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 32px; font-weight: 700; color: #00aad2; margin-bottom: 4px;">8주</div>
+                        <div style="font-size: 13px; color: #94a3b8;">파일럿 시작</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 32px; font-weight: 700; color: #00aad2; margin-bottom: 4px;">12주</div>
+                        <div style="font-size: 13px; color: #94a3b8;">MVP 안정화</div>
+                    </div>
+                </div>
+                <div style="margin-top: 40px; font-size: 15px; color: #475569;">
+                    보안과 거버넌스가 검증된 <strong style="color:#00aad2;">엔터프라이즈 AI 지식 서비스</strong>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Navigation -->
-    <div class="slide-counter"><span id="current-slide">1</span> / <span id="total-slides">10</span></div>
     <div class="navigation">
-        <button class="nav-btn" id="prev-btn">&#x2190;</button>
-        <button class="nav-btn" id="next-btn">&#x2192;</button>
+        <button class="nav-btn" onclick="changeSlide(-1)">&#8592;</button>
+        <button class="nav-btn" onclick="changeSlide(1)">&#8594;</button>
     </div>
+    <div class="slide-counter">1 / 15</div>
 
     <script>
-        let currentSlide = 1;
-        const totalSlides = 10;
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const counter = document.querySelector('.slide-counter');
+
         function showSlide(n) {
-            const slides = document.querySelectorAll('.slide');
-            if (n > totalSlides) currentSlide = totalSlides;
-            if (n < 1) currentSlide = 1;
-            slides.forEach(s => s.classList.remove('active'));
-            slides[currentSlide - 1].classList.add('active');
-            document.getElementById('current-slide').textContent = currentSlide;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            counter.textContent = `${currentSlide + 1} / ${slides.length}`;
         }
-        function nextSlide() { if (currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); } }
-        function prevSlide() { if (currentSlide > 1) { currentSlide--; showSlide(currentSlide); } }
-        document.getElementById('next-btn').addEventListener('click', nextSlide);
-        document.getElementById('prev-btn').addEventListener('click', prevSlide);
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
-            else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevSlide(); }
-            else if (e.key === 'Home') { e.preventDefault(); currentSlide = 1; showSlide(currentSlide); }
-            else if (e.key === 'End') { e.preventDefault(); currentSlide = totalSlides; showSlide(currentSlide); }
+
+        function changeSlide(dir) { showSlide(currentSlide + dir); }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+            if (e.key === 'Home') showSlide(0);
+            if (e.key === 'End') showSlide(slides.length - 1);
         });
-        let touchStartX = 0;
-        document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
-        document.addEventListener('touchend', (e) => {
-            const diff = touchStartX - e.changedTouches[0].screenX;
-            if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
-        });
-        // Fullscreen
-        document.getElementById('fullscreen-btn').addEventListener('click', () => {
-            if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); }
-            else { document.exitFullscreen(); }
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'f' || e.key === 'F') {
-                if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); }
-                else { document.exitFullscreen(); }
-            }
-        });
-        document.getElementById('total-slides').textContent = totalSlides;
-        showSlide(currentSlide);
-        window.addEventListener('beforeprint', () => { document.querySelectorAll('.slide').forEach(s => { s.style.display = 'flex'; }); });
-        window.addEventListener('afterprint', () => { showSlide(currentSlide); });
     </script>
 </body>
 </html>
