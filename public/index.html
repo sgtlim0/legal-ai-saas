@@ -37,9 +37,9 @@
 
         .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 40px;
-            max-width: 1400px;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 30px;
+            max-width: 1600px;
             width: 100%;
         }
 
@@ -63,6 +63,7 @@
         .card:nth-child(1)::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
         .card:nth-child(2)::before { background: linear-gradient(90deg, #00aad2, #38d9f5); }
         .card:nth-child(3)::before { background: linear-gradient(90deg, #002c5f, #00aad2); }
+        .card:nth-child(4)::before { background: linear-gradient(90deg, #10b981, #34d399); }
         .card:hover {
             background: rgba(255, 255, 255, 0.08);
             border-color: rgba(255, 255, 255, 0.2);
@@ -157,6 +158,18 @@
         }
         .card:nth-child(3) .link-html:hover { background: rgba(0, 170, 210, 0.3); }
 
+        .card:nth-child(4) .card-badge {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .card:nth-child(4) .link-html {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+        }
+        .card:nth-child(4) .link-html:hover { background: rgba(16, 185, 129, 0.3); }
+
         .footer {
             margin-top: 60px;
             text-align: center;
@@ -207,6 +220,16 @@
                 <a href="/hchat-contributor/" class="card-link link-html">Presentation</a>
                 <a href="/hchat-contributor/HChat-Contributor.md" class="card-link link-md">Markdown</a>
                 <a href="/hchat-contributor/HChat-Contributor.pdf" class="card-link link-pdf">PDF</a>
+            </div>
+        </div>
+        <div class="card">
+            <span class="card-badge">GitLab Agent</span>
+            <h2>내부망 GitLab AI 코딩 에이전트 플랫폼</h2>
+            <p>5-에이전트 파이프라인 · ROI 4.2x · 65% 생산성 향상 · 연간 8.4억원 절감. GitHub Agentic Workflows를 내부망 GitLab 환경에 구현하는 전략.</p>
+            <div class="card-links">
+                <a href="/gitlab-agentic/" class="card-link link-html">Presentation</a>
+                <a href="/gitlab-agentic/GitLab-Agentic-Workflows.md" class="card-link link-md">Markdown</a>
+                <a href="/gitlab-agentic/GitLab-Agentic-Workflows.pdf" class="card-link link-pdf">PDF</a>
             </div>
         </div>
     </div>

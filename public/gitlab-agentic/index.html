@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitLab Agentic Workflows - 내부망 AI 코딩 에이전트 플랫폼</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: #000; color: #fff; overflow: hidden;
+        }
+        .presentation-container { width: 100vw; height: 100vh; position: relative; }
+        .slide {
+            width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none;
+            background: linear-gradient(135deg, #002c5f 0%, #001a3a 100%);
+            padding: 55px 75px;
+        }
+        .slide.active { display: flex; flex-direction: column; animation: slideIn 0.5s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* HMG Brand */
+        .hmg-logo { position: absolute; top: 35px; right: 75px; font-size: 14px; font-weight: 600; color: #00aad2; letter-spacing: 3px; text-transform: uppercase; }
+        .slide-header { margin-bottom: 30px; }
+        .slide-number { font-size: 13px; color: #00aad2; margin-bottom: 8px; font-weight: 600; letter-spacing: 1px; }
+        .slide-title { font-size: 40px; font-weight: 700; color: #fff; margin-bottom: 8px; line-height: 1.2; }
+        .slide-subtitle { font-size: 20px; color: #00aad2; font-weight: 400; }
+        .slide-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+        /* Navigation */
+        .navigation { position: fixed; bottom: 35px; right: 75px; display: flex; gap: 12px; z-index: 1000; }
+        .nav-btn {
+            width: 46px; height: 46px; border-radius: 50%;
+            background: rgba(0,170,210,0.2); border: 2px solid #00aad2;
+            color: #00aad2; font-size: 22px; cursor: pointer;
+            transition: all 0.3s; display: flex; align-items: center; justify-content: center;
+        }
+        .nav-btn:hover { background: #00aad2; color: #002c5f; transform: scale(1.1); }
+        .slide-counter { position: fixed; bottom: 45px; left: 75px; font-size: 15px; color: #00aad2; z-index: 1000; }
+        .toolbar { position: fixed; top: 25px; left: 35px; display: flex; gap: 8px; z-index: 1000; }
+        .toolbar-btn {
+            width: 40px; height: 40px; border-radius: 8px;
+            background: rgba(0,170,210,0.12); border: 1.5px solid rgba(0,170,210,0.35);
+            color: #00aad2; font-size: 16px; cursor: pointer;
+            transition: all 0.3s; display: flex; align-items: center; justify-content: center; text-decoration: none;
+        }
+        .toolbar-btn:hover { background: rgba(0,170,210,0.25); border-color: #00aad2; }
+
+        /* Layouts */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+
+        /* Cards */
+        .card {
+            background: rgba(255,255,255,0.04); border-left: 3px solid #00aad2;
+            padding: 22px; border-radius: 8px; transition: all 0.3s;
+        }
+        .card:hover { background: rgba(255,255,255,0.07); transform: translateY(-3px); }
+        .card-title { font-size: 18px; font-weight: 700; color: #00aad2; margin-bottom: 10px; }
+        .card-content { font-size: 14px; line-height: 1.7; color: #e0e0e0; }
+
+        /* Stats */
+        .stats-box {
+            background: rgba(0,170,210,0.1); border: 2px solid rgba(0,170,210,0.4);
+            padding: 18px 22px; border-radius: 8px; text-align: center;
+        }
+        .stats-number { font-size: 36px; font-weight: 700; color: #00aad2; margin-bottom: 4px; }
+        .stats-label { font-size: 13px; color: #e0e0e0; }
+
+        /* KPI */
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .kpi-box {
+            background: rgba(0,170,210,0.08); padding: 20px; border-radius: 8px;
+            border-top: 3px solid #00aad2; text-align: center;
+        }
+        .kpi-value { font-size: 32px; font-weight: 700; color: #00aad2; margin-bottom: 6px; }
+        .kpi-label { font-size: 12px; color: #e0e0e0; }
+
+        /* Table */
+        .table { width: 100%; border-collapse: collapse; }
+        .table th { background: rgba(0,170,210,0.2); color: #00aad2; padding: 12px 16px; font-size: 13px; text-align: left; border-bottom: 2px solid rgba(0,170,210,0.4); }
+        .table td { padding: 11px 16px; font-size: 13px; color: #e0e0e0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .table tr:hover { background: rgba(255,255,255,0.03); }
+
+        /* Tags */
+        .tag {
+            display: inline-block; padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 600; margin-right: 6px; margin-bottom: 6px;
+        }
+        .tag-cyan { background: rgba(0,170,210,0.2); color: #00aad2; border: 1px solid rgba(0,170,210,0.4); }
+        .tag-orange { background: rgba(255,107,0,0.2); color: #ff6b00; border: 1px solid rgba(255,107,0,0.4); }
+        .tag-green { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4); }
+        .tag-red { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.4); }
+
+        /* Highlight */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0,170,210,0.12), rgba(0,44,95,0.3));
+            border: 1px solid rgba(0,170,210,0.35); border-radius: 12px;
+            padding: 24px 28px;
+        }
+        .highlight-text { font-size: 18px; line-height: 1.7; color: #e0e0e0; }
+        .highlight-text strong { color: #00aad2; }
+
+        /* Flow */
+        .flow-container { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .flow-step {
+            background: rgba(0,170,210,0.1); border: 1px solid rgba(0,170,210,0.3);
+            padding: 14px 20px; border-radius: 10px; text-align: center; flex: 1; min-width: 130px;
+        }
+        .flow-step-title { font-size: 14px; font-weight: 700; color: #00aad2; margin-bottom: 4px; }
+        .flow-step-desc { font-size: 11px; color: #e0e0e0; }
+        .flow-arrow { font-size: 20px; color: #00aad2; flex-shrink: 0; }
+
+        /* Timeline */
+        .timeline-item {
+            display: flex; gap: 20px; align-items: flex-start; margin-bottom: 18px;
+        }
+        .timeline-marker {
+            width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+            background: rgba(0,170,210,0.2); border: 2px solid #00aad2;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 700; color: #00aad2;
+        }
+        .timeline-content { flex: 1; }
+        .timeline-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+        .timeline-desc { font-size: 13px; color: #e0e0e0; line-height: 1.5; }
+
+        /* Cover */
+        .cover-title { font-size: 54px; font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+        .cover-title .accent { color: #00aad2; }
+        .cover-sub { font-size: 22px; color: #e0e0e0; margin-bottom: 40px; line-height: 1.5; }
+        .cover-stats { display: flex; gap: 50px; }
+        .cover-stat-value { font-size: 40px; font-weight: 700; color: #00aad2; }
+        .cover-stat-label { font-size: 14px; color: #94a3b8; margin-top: 4px; }
+        .cover-badge {
+            display: inline-block; padding: 6px 18px; border-radius: 20px;
+            background: rgba(0,170,210,0.15); border: 1px solid rgba(0,170,210,0.4);
+            color: #00aad2; font-size: 13px; font-weight: 600; margin-bottom: 20px; letter-spacing: 1px;
+        }
+
+        /* Compare */
+        .compare-box {
+            background: rgba(255,255,255,0.03); border-radius: 12px; padding: 24px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .compare-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+        .compare-item { font-size: 14px; color: #e0e0e0; margin-bottom: 8px; padding-left: 16px; position: relative; line-height: 1.5; }
+        .compare-item::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; }
+        .before-item::before { background: #f87171; }
+        .after-item::before { background: #34d399; }
+
+        /* Risk matrix */
+        .risk-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+        .risk-label { font-size: 14px; font-weight: 600; color: #fff; width: 180px; }
+        .risk-bar { flex: 1; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.1); }
+        .risk-fill { height: 100%; border-radius: 4px; }
+        .risk-value { font-size: 13px; color: #e0e0e0; width: 50px; text-align: right; }
+
+        /* Pipeline diagram */
+        .pipeline-box {
+            background: rgba(0,170,210,0.06); border: 1px solid rgba(0,170,210,0.25);
+            border-radius: 10px; padding: 18px; text-align: center;
+        }
+        .pipeline-icon { font-size: 28px; margin-bottom: 6px; }
+        .pipeline-name { font-size: 14px; font-weight: 700; color: #00aad2; margin-bottom: 4px; }
+        .pipeline-desc { font-size: 11px; color: #e0e0e0; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <a href="/" class="toolbar-btn" title="Home">&#8962;</a>
+            <button class="toolbar-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
+        </div>
+
+        <!-- Slide 1: Cover -->
+        <div class="slide active">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-content" style="justify-content: center;">
+                <div class="cover-badge">GITLAB AGENTIC WORKFLOWS</div>
+                <div class="cover-title">
+                    내부망 <span class="accent">AI 코딩 에이전트</span><br>플랫폼 구축 전략
+                </div>
+                <div class="cover-sub">
+                    GitLab CI/CD + LLM Agent Pipeline · Issue-to-MR 자동화 · 보안 샌드박스 실행<br>
+                    GitHub Agentic Workflows의 내부망 GitLab 구현 전략
+                </div>
+                <div class="cover-stats">
+                    <div><div class="cover-stat-value">65%</div><div class="cover-stat-label">개발 생산성 향상</div></div>
+                    <div><div class="cover-stat-value">ROI 4.2x</div><div class="cover-stat-label">투자 대비 수익</div></div>
+                    <div><div class="cover-stat-value">3.5h→40m</div><div class="cover-stat-label">이슈 해결 시간</div></div>
+                    <div><div class="cover-stat-value">연 8.4억</div><div class="cover-stat-label">비용 절감</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: GitHub Agentic Workflows 분석 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">01 — BENCHMARK</div>
+                <div class="slide-title">GitHub Agentic Workflows 분석</div>
+                <div class="slide-subtitle">GitHub Copilot Coding Agent의 핵심 기능과 워크플로우</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-4" style="margin-bottom: 24px;">
+                    <div class="card">
+                        <div class="card-title">Coding Agent (GA)</div>
+                        <div class="card-content">
+                            Issue 할당 → 자동 코드 분석 → 구현 → 테스트 → PR 생성. GitHub Actions 샌드박스 비동기 실행. 2025.09 정식 출시.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Markdown Workflow</div>
+                        <div class="card-content">
+                            복잡한 YAML 대신 <strong>Markdown 파일</strong>로 워크플로우 정의. 자연어 지시를 GitHub Actions로 자동 변환. 직관적 설정.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Multi-Agent</div>
+                        <div class="card-content">
+                            Claude, Codex 등 서드파티 에이전트 통합. MCP 기반 확장. 엔터프라이즈 감사 로그 + 거버넌스 관리.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">보안 샌드박스</div>
+                        <div class="card-content">
+                            기본 읽기 전용 권한. 쓰기는 사전 승인된 출력만 허용. 최소 권한 원칙(Least Privilege) 적용.
+                        </div>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <div class="flow-container">
+                        <div class="flow-step">
+                            <div class="flow-step-title">Issue 생성</div>
+                            <div class="flow-step-desc">개발자가 Issue 작성</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-step-title">Agent 할당</div>
+                            <div class="flow-step-desc">Copilot에 Issue 할당</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-step-title">샌드박스 실행</div>
+                            <div class="flow-step-desc">클라우드 환경 자동 구성</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-step-title">코드 구현</div>
+                            <div class="flow-step-desc">분석·편집·테스트 반복</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-step-title">PR 생성</div>
+                            <div class="flow-step-desc">Draft PR + 리뷰 요청</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: 왜 내부망 GitLab인가 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">02 — WHY GITLAB</div>
+                <div class="slide-title">왜 내부망 GitLab 에이전트인가</div>
+                <div class="slide-subtitle">GitHub 대비 내부망 GitLab 환경의 필요성과 차별점</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div>
+                        <div class="compare-box" style="margin-bottom: 20px;">
+                            <div class="compare-title" style="color: #f87171;">GitHub Copilot Agent의 한계</div>
+                            <div class="compare-item before-item">코드가 GitHub 클라우드 샌드박스로 전송</div>
+                            <div class="compare-item before-item">내부 소스코드 외부 노출 리스크</div>
+                            <div class="compare-item before-item">사내 인프라(SAP, DMS 등) 연동 불가</div>
+                            <div class="compare-item before-item">엔터프라이즈 보안 정책 충족 어려움</div>
+                            <div class="compare-item before-item">모델 선택 제한 (GitHub 제공 모델만)</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="compare-box" style="margin-bottom: 20px;">
+                            <div class="compare-title" style="color: #34d399;">내부망 GitLab Agent의 장점</div>
+                            <div class="compare-item after-item">폐쇄망 내 전체 파이프라인 실행</div>
+                            <div class="compare-item after-item">소스코드 외부 유출 Zero</div>
+                            <div class="compare-item after-item">사내 시스템 직접 연동 (SAP, Jira, DMS)</div>
+                            <div class="compare-item after-item">SOC2, ISO27001 기반 보안 정책 준수</div>
+                            <div class="compare-item after-item">자체 LLM + Claude API 하이브리드 선택</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kpi-grid" style="margin-top: 16px;">
+                    <div class="kpi-box">
+                        <div class="kpi-value">100%</div>
+                        <div class="kpi-label">데이터 폐쇄망 처리</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-value">Zero</div>
+                        <div class="kpi-label">외부 코드 유출</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-value">직접</div>
+                        <div class="kpi-label">사내 인프라 연동</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-value">자유</div>
+                        <div class="kpi-label">모델 선택 유연성</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: 핵심 아키텍처 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">03 — ARCHITECTURE</div>
+                <div class="slide-title">핵심 아키텍처</div>
+                <div class="slide-subtitle">GitLab CI/CD + AI Agent 파이프라인 전체 구조</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div>
+                        <div style="margin-bottom: 20px;">
+                            <div class="card-title" style="margin-bottom: 14px;">Agent Orchestration Layer</div>
+                            <div class="grid-2" style="gap: 12px;">
+                                <div class="pipeline-box">
+                                    <div class="pipeline-icon">🎯</div>
+                                    <div class="pipeline-name">Issue Analyzer</div>
+                                    <div class="pipeline-desc">이슈 파싱 · 요구사항 추출 · 난이도 분류</div>
+                                </div>
+                                <div class="pipeline-box">
+                                    <div class="pipeline-icon">🏗️</div>
+                                    <div class="pipeline-name">Code Planner</div>
+                                    <div class="pipeline-desc">코드베이스 분석 · 변경 계획 수립</div>
+                                </div>
+                                <div class="pipeline-box">
+                                    <div class="pipeline-icon">⚡</div>
+                                    <div class="pipeline-name">Code Generator</div>
+                                    <div class="pipeline-desc">코드 생성 · 멀티파일 편집</div>
+                                </div>
+                                <div class="pipeline-box">
+                                    <div class="pipeline-icon">🛡️</div>
+                                    <div class="pipeline-name">Quality Gate</div>
+                                    <div class="pipeline-desc">테스트 · 린트 · 보안 스캔</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card-title" style="margin-bottom: 14px;">Infrastructure Stack</div>
+                        <table class="table">
+                            <tr><th>Layer</th><th>Technology</th></tr>
+                            <tr><td>SCM</td><td>GitLab Self-Managed (CE/EE)</td></tr>
+                            <tr><td>CI/CD</td><td>GitLab Runner + Docker Executor</td></tr>
+                            <tr><td>Sandbox</td><td>격리 Docker 컨테이너 (per-task)</td></tr>
+                            <tr><td>AI Engine</td><td>Claude API / vLLM (자체 호스팅)</td></tr>
+                            <tr><td>Agent Framework</td><td>Claude Agent SDK / LangGraph</td></tr>
+                            <tr><td>MCP Server</td><td>GitLab MCP + 사내 시스템 MCP</td></tr>
+                            <tr><td>Storage</td><td>PostgreSQL + Redis + MinIO</td></tr>
+                            <tr><td>Monitoring</td><td>Grafana + Prometheus + Sentry</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Issue-to-MR 파이프라인 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">04 — PIPELINE</div>
+                <div class="slide-title">Issue-to-MR 자동화 파이프라인</div>
+                <div class="slide-subtitle">이슈 생성부터 Merge Request까지 완전 자동화 워크플로우</div>
+            </div>
+            <div class="slide-content">
+                <div style="margin-bottom: 24px;">
+                    <div class="timeline-item">
+                        <div class="timeline-marker">1</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Issue Trigger <span class="tag tag-cyan">Webhook</span></div>
+                            <div class="timeline-desc">개발자가 GitLab Issue에 <code>/agent</code> 라벨 또는 <code>@ai-agent</code> 멘션 → GitLab Webhook이 Agent Orchestrator에 이벤트 전송</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">2</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Context Analysis <span class="tag tag-green">Sonnet</span></div>
+                            <div class="timeline-desc">이슈 본문 + 코멘트 + 코드베이스 구조 분석 → 변경 필요 파일 식별, 영향 범위 산정, 구현 계획(Spec) 수립</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">3</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Sandbox Execution <span class="tag tag-orange">Docker</span></div>
+                            <div class="timeline-desc">격리된 Docker 컨테이너에서 리포지토리 클론 → 코드 생성/수정 → 빌드 → 단위 테스트 → 린트 실행. 실패 시 Self-healing 루프</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">4</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Quality Gate <span class="tag tag-red">필수</span></div>
+                            <div class="timeline-desc">CI 파이프라인 통과 · SAST/DAST 보안 스캔 · 코드 커버리지 80%+ · 아키텍처 규칙 검증 → 모두 Pass 시 MR 생성</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">5</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Merge Request <span class="tag tag-cyan">Draft MR</span></div>
+                            <div class="timeline-desc">Draft MR 자동 생성 → 변경 요약 · 테스트 결과 · 영향 분석 포함 → 담당 리뷰어 자동 배정 → 리뷰 코멘트 반영 루프</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: 에이전트 구성 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">05 — AGENTS</div>
+                <div class="slide-title">5-에이전트 파이프라인 구성</div>
+                <div class="slide-subtitle">각 에이전트의 역할과 LLM 모델 배치 전략</div>
+            </div>
+            <div class="slide-content">
+                <table class="table" style="margin-bottom: 20px;">
+                    <thead>
+                        <tr>
+                            <th style="width:20%">Agent</th>
+                            <th style="width:15%">Model</th>
+                            <th style="width:35%">역할</th>
+                            <th style="width:15%">입력</th>
+                            <th style="width:15%">출력</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color:#00aad2">Issue Analyzer</strong></td>
+                            <td><span class="tag tag-cyan">Haiku</span></td>
+                            <td>이슈 파싱, 요구사항 추출, 난이도/복잡도 분류, 우선순위 판정</td>
+                            <td>Issue JSON</td>
+                            <td>Task Spec</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">Code Planner</strong></td>
+                            <td><span class="tag tag-green">Sonnet</span></td>
+                            <td>코드베이스 분석, 변경 파일 식별, 구현 계획 수립, 의존성 그래프</td>
+                            <td>Task Spec + Repo</td>
+                            <td>Change Plan</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">Code Generator</strong></td>
+                            <td><span class="tag tag-green">Sonnet</span></td>
+                            <td>코드 생성/수정, 멀티파일 편집, Self-healing (빌드 에러 자동 수정)</td>
+                            <td>Change Plan</td>
+                            <td>Code Diff</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">Test Generator</strong></td>
+                            <td><span class="tag tag-cyan">Haiku</span></td>
+                            <td>단위/통합 테스트 자동 생성, 엣지 케이스 커버리지 확보</td>
+                            <td>Code Diff</td>
+                            <td>Test Suite</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">Review Agent</strong></td>
+                            <td><span class="tag tag-orange">Opus(월간)</span></td>
+                            <td>코드 품질 리뷰, 보안 취약점 분석, 아키텍처 컨벤션 검증</td>
+                            <td>Code + Tests</td>
+                            <td>MR + Review</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="highlight-box">
+                    <div class="flow-container">
+                        <div class="flow-step">
+                            <div class="flow-step-title">Issue Analyzer</div>
+                            <div class="flow-step-desc">Haiku · 저비용</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-step-title">Code Planner</div>
+                            <div class="flow-step-desc">Sonnet · 품질</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-step-title">Code Generator</div>
+                            <div class="flow-step-desc">Sonnet · 품질</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-step-title">Test Generator</div>
+                            <div class="flow-step-desc">Haiku · 저비용</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-step-title">Review Agent</div>
+                            <div class="flow-step-desc">Opus · 심층</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: 보안 샌드박스 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">06 — SECURITY</div>
+                <div class="slide-title">보안 샌드박스 아키텍처</div>
+                <div class="slide-subtitle">격리된 실행 환경과 다층 보안 체계</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div>
+                        <div class="card" style="margin-bottom: 16px;">
+                            <div class="card-title">컨테이너 격리</div>
+                            <div class="card-content">
+                                에이전트 태스크당 격리된 Docker 컨테이너 생성. 네트워크 정책으로 내부망만 접근 허용. 태스크 완료 후 자동 삭제. CPU/메모리 리소스 제한.
+                            </div>
+                        </div>
+                        <div class="card" style="margin-bottom: 16px;">
+                            <div class="card-title">코드 실행 제한</div>
+                            <div class="card-content">
+                                읽기 전용 마운트 (원본 리포지토리). 쓰기는 임시 워크스페이스만 허용. 외부 네트워크 차단 (사내 레지스트리만 허용). 실행 시간 타임아웃 (30분).
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">감사 추적</div>
+                            <div class="card-content">
+                                모든 에이전트 액션 감사 로그. LLM 프롬프트/응답 전체 저장. Git 커밋 히스토리 추적. 관리자 대시보드에서 실시간 모니터링.
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card-title" style="margin-bottom: 14px;">보안 레이어</div>
+                        <div class="risk-row">
+                            <div class="risk-label">네트워크 격리</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:100%; background: #34d399;"></div></div>
+                            <div class="risk-value" style="color: #34d399;">완전</div>
+                        </div>
+                        <div class="risk-row">
+                            <div class="risk-label">컨테이너 격리</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:100%; background: #34d399;"></div></div>
+                            <div class="risk-value" style="color: #34d399;">완전</div>
+                        </div>
+                        <div class="risk-row">
+                            <div class="risk-label">SAST/DAST 스캔</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:95%; background: #00aad2;"></div></div>
+                            <div class="risk-value" style="color: #00aad2;">자동</div>
+                        </div>
+                        <div class="risk-row">
+                            <div class="risk-label">시크릿 검출</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:100%; background: #34d399;"></div></div>
+                            <div class="risk-value" style="color: #34d399;">완전</div>
+                        </div>
+                        <div class="risk-row">
+                            <div class="risk-label">실행 타임아웃</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:90%; background: #00aad2;"></div></div>
+                            <div class="risk-value" style="color: #00aad2;">30분</div>
+                        </div>
+                        <div class="risk-row">
+                            <div class="risk-label">감사 로깅</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:100%; background: #34d399;"></div></div>
+                            <div class="risk-value" style="color: #34d399;">완전</div>
+                        </div>
+                        <div class="risk-row">
+                            <div class="risk-label">휴먼 리뷰 게이트</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:100%; background: #ff6b00;"></div></div>
+                            <div class="risk-value" style="color: #ff6b00;">필수</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: 토큰 최적화 & 알려진 한계 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">07 — OPTIMIZATION</div>
+                <div class="slide-title">토큰 최적화 & 알려진 한계</div>
+                <div class="slide-subtitle">에이전트 비용 효율화와 AI 코딩 에이전트의 현실적 한계 대응</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div>
+                        <div class="card" style="margin-bottom: 16px; border-left-color: #34d399;">
+                            <div class="card-title" style="color: #34d399;">cgrep: 시맨틱 코드 검색</div>
+                            <div class="card-content">
+                                BM25(Tantivy) + AST 분석(tree-sitter) 하이브리드 코드 검색. 에이전트가 코드베이스를 탐색할 때 <strong style="color:#34d399">95% 토큰 절감</strong>, 58배 속도 향상. MCP Server로 에이전트에 직접 연동.
+                            </div>
+                        </div>
+                        <div class="card" style="margin-bottom: 16px;">
+                            <div class="card-title">2단계 에이전트 워크플로우</div>
+                            <div class="card-content">
+                                <strong>1단계:</strong> cgrep으로 후보 파일/함수 로케이팅<br>
+                                <strong>2단계:</strong> 선택적으로 필요한 코드만 확장 로딩<br>
+                                불필요한 전체 파일 읽기를 제거하여 <strong>토큰 비용 20배 절감</strong>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">프롬프트 캐싱</div>
+                            <div class="card-content">
+                                반복 패턴 프롬프트 캐시 · 프로젝트 컨텍스트 프리로딩 · 에이전트별 시스템 프롬프트 최적화. 월간 API 비용 40% 추가 절감.
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card-title" style="margin-bottom: 14px; color: #f87171;">AI 코딩 에이전트의 알려진 한계</div>
+                        <div class="risk-row">
+                            <div class="risk-label">의존성 버전 환각</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:80%; background: #f87171;"></div></div>
+                            <div class="risk-value" style="color: #f87171;">높음</div>
+                        </div>
+                        <div class="risk-row">
+                            <div class="risk-label">단순 문자열 치환</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:70%; background: #ff6b00;"></div></div>
+                            <div class="risk-value" style="color: #ff6b00;">중간</div>
+                        </div>
+                        <div class="risk-row">
+                            <div class="risk-label">컨텍스트 윈도우 한계</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:60%; background: #ff6b00;"></div></div>
+                            <div class="risk-value" style="color: #ff6b00;">중간</div>
+                        </div>
+                        <div class="risk-row">
+                            <div class="risk-label">대규모 리팩토링 실패</div>
+                            <div class="risk-bar"><div class="risk-fill" style="width:75%; background: #f87171;"></div></div>
+                            <div class="risk-value" style="color: #f87171;">높음</div>
+                        </div>
+                        <div style="margin-top: 16px;">
+                            <div class="highlight-box">
+                                <div class="highlight-text" style="font-size: 14px;">
+                                    <strong>완화 전략:</strong> 버그 수정 · 테스트 생성 · 문서 업데이트 등 <strong>범위가 명확한 작업</strong>에 에이전트 집중. 대규모 리팩토링 · 아키텍처 변경은 <strong>개발자가 직접 수행</strong>. lock 파일 기반 의존성 검증 필수.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: 활용 시나리오 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">07 — USE CASES</div>
+                <div class="slide-title">핵심 활용 시나리오</div>
+                <div class="slide-subtitle">에이전트가 자율 처리하는 개발 업무 유형</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div>
+                        <div class="card" style="margin-bottom: 16px;">
+                            <div class="card-title">버그 수정 자동화</div>
+                            <div class="card-content">
+                                <strong>Before:</strong> 3.5시간 → <strong>After:</strong> 40분 <span class="tag tag-green" style="margin-left: 8px;">81% 절감</span><br>
+                                에러 로그 분석 → 원인 파일 식별 → 수정 코드 생성 → 회귀 테스트 → Draft MR
+                            </div>
+                        </div>
+                        <div class="card" style="margin-bottom: 16px;">
+                            <div class="card-title">테스트 커버리지 확대</div>
+                            <div class="card-content">
+                                <strong>Before:</strong> 2일 → <strong>After:</strong> 2시간 <span class="tag tag-green" style="margin-left: 8px;">87% 절감</span><br>
+                                커버리지 갭 분석 → 테스트 케이스 자동 생성 → 엣지 케이스 포함 → 80%+ 달성
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">문서 자동 업데이트</div>
+                            <div class="card-content">
+                                <strong>Before:</strong> 수동/누락 → <strong>After:</strong> 자동 <span class="tag tag-green" style="margin-left: 8px;">누락 Zero</span><br>
+                                코드 변경 감지 → API 문서 · README · CHANGELOG 자동 갱신
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card" style="margin-bottom: 16px;">
+                            <div class="card-title">기능 구현 보조</div>
+                            <div class="card-content">
+                                <strong>Before:</strong> 1주 → <strong>After:</strong> 1-2일 <span class="tag tag-green" style="margin-left: 8px;">70% 절감</span><br>
+                                이슈 요구사항 → 구현 계획 → 스캐폴딩 코드 생성 → 테스트 포함 → 리뷰 대기
+                            </div>
+                        </div>
+                        <div class="card" style="margin-bottom: 16px;">
+                            <div class="card-title">기술 부채 해소</div>
+                            <div class="card-content">
+                                <strong>Before:</strong> 후순위 → <strong>After:</strong> 자동 처리 <span class="tag tag-green" style="margin-left: 8px;">지속 개선</span><br>
+                                코드 스멜 감지 → 리팩토링 제안 → 자동 수정 → 회귀 테스트 검증
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">보안 취약점 패치</div>
+                            <div class="card-content">
+                                <strong>Before:</strong> 4시간 → <strong>After:</strong> 30분 <span class="tag tag-green" style="margin-left: 8px;">88% 절감</span><br>
+                                SAST 스캔 결과 → 취약점 분류 → 패치 코드 생성 → 보안 테스트 → MR
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: ROI 분석 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">08 — ROI</div>
+                <div class="slide-title">ROI 분석</div>
+                <div class="slide-subtitle">개발 생산성 향상과 비용 절감 효과</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div>
+                        <table class="table" style="margin-bottom: 16px;">
+                            <thead>
+                                <tr><th>항목</th><th>Before</th><th>After</th><th>절감</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>버그 수정</td><td>3.2억원</td><td>0.6억원</td><td style="color:#34d399">2.6억원</td></tr>
+                                <tr><td>테스트 작성</td><td>2.8억원</td><td>0.4억원</td><td style="color:#34d399">2.4억원</td></tr>
+                                <tr><td>기술 부채 해소</td><td>1.5억원</td><td>0.3억원</td><td style="color:#34d399">1.2억원</td></tr>
+                                <tr><td>문서 관리</td><td>0.8억원</td><td>0.1억원</td><td style="color:#34d399">0.7억원</td></tr>
+                                <tr><td>보안 패치</td><td>1.2억원</td><td>0.2억원</td><td style="color:#34d399">1.0억원</td></tr>
+                                <tr style="background:rgba(0,170,210,0.1);"><td><strong>합계</strong></td><td><strong>9.5억원</strong></td><td><strong>1.6억원</strong></td><td style="color:#34d399"><strong>7.9억원</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <div class="kpi-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 20px;">
+                            <div class="kpi-box">
+                                <div class="kpi-value">65%</div>
+                                <div class="kpi-label">개발 시간 절감</div>
+                            </div>
+                            <div class="kpi-box">
+                                <div class="kpi-value">4.2x</div>
+                                <div class="kpi-label">투자 대비 ROI</div>
+                            </div>
+                            <div class="kpi-box">
+                                <div class="kpi-value">8개월</div>
+                                <div class="kpi-label">투자 회수 기간</div>
+                            </div>
+                            <div class="kpi-box">
+                                <div class="kpi-value">8.4억</div>
+                                <div class="kpi-label">연간 순 절감</div>
+                            </div>
+                        </div>
+                        <div class="highlight-box">
+                            <div class="highlight-text">
+                                <strong>정성적 효과</strong><br>
+                                개발자 만족도 향상 (반복 업무 감소) · 코드 품질 일관성 확보 · 보안 취약점 사전 차단 · 온보딩 가속화 (신규 개발자 생산성 2배)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: 비용 구조 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">09 — COST</div>
+                <div class="slide-title">비용 구조</div>
+                <div class="slide-subtitle">연간 운영 비용과 AI API 비용 상세</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div>
+                        <div class="card-title" style="margin-bottom: 14px;">연간 운영 비용</div>
+                        <table class="table" style="margin-bottom: 20px;">
+                            <thead>
+                                <tr><th>항목</th><th>비용</th><th>비율</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>AI API (Claude)</td><td>0.9억원</td><td>47%</td></tr>
+                                <tr><td>GitLab Runner 인프라</td><td>0.4억원</td><td>21%</td></tr>
+                                <tr><td>운영 인력 (2명)</td><td>0.3억원</td><td>16%</td></tr>
+                                <tr><td>모니터링/보안 도구</td><td>0.2억원</td><td>11%</td></tr>
+                                <tr><td>교육/온보딩</td><td>0.1억원</td><td>5%</td></tr>
+                                <tr style="background:rgba(0,170,210,0.1);"><td><strong>합계</strong></td><td><strong>1.9억원</strong></td><td><strong>100%</strong></td></tr>
+                            </tbody>
+                        </table>
+                        <div class="highlight-box">
+                            <div class="highlight-text" style="font-size: 16px;">
+                                투자 <strong>1.9억</strong> → 절감 <strong>8.4억</strong> = <strong>ROI 4.2x</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card-title" style="margin-bottom: 14px;">AI 비용 (1,000회 실행 기준)</div>
+                        <table class="table" style="margin-bottom: 20px;">
+                            <thead>
+                                <tr><th>Agent</th><th>Model</th><th>비용</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Issue Analyzer</td><td>Haiku</td><td>$0.50</td></tr>
+                                <tr><td>Code Planner</td><td>Sonnet</td><td>$4.50</td></tr>
+                                <tr><td>Code Generator</td><td>Sonnet</td><td>$6.00</td></tr>
+                                <tr><td>Test Generator</td><td>Haiku</td><td>$0.50</td></tr>
+                                <tr><td>Review Agent</td><td>Opus</td><td>$45.00</td></tr>
+                                <tr style="background:rgba(0,170,210,0.1);"><td><strong>합계</strong></td><td></td><td><strong>$56.50</strong></td></tr>
+                            </tbody>
+                        </table>
+                        <div class="card">
+                            <div class="card-title">비용 최적화 전략</div>
+                            <div class="card-content">
+                                <strong>Haiku 우선:</strong> 고빈도 분류/분석 작업<br>
+                                <strong>Sonnet 핵심:</strong> 코드 생성/계획 품질 확보<br>
+                                <strong>Opus 제한:</strong> 월간 심층 리뷰만 사용<br>
+                                <strong>캐싱:</strong> 반복 패턴 프롬프트 캐시 활용
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: MCP 연동 & 확장 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">10 — EXTENSION</div>
+                <div class="slide-title">MCP 연동 & 사내 시스템 확장</div>
+                <div class="slide-subtitle">Model Context Protocol 기반 사내 인프라 통합</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-3" style="margin-bottom: 24px;">
+                    <div class="card">
+                        <div class="card-title">GitLab MCP Server</div>
+                        <div class="card-content">
+                            Issue/MR CRUD · 파이프라인 상태 조회 · 코드 리뷰 코멘트 · 브랜치 관리 · CI/CD 트리거. 에이전트가 GitLab을 직접 조작.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Confluence MCP</div>
+                        <div class="card-content">
+                            사내 위키 검색 · 기술 문서 참조 · 아키텍처 문서 조회 · 온보딩 가이드 참조. RAG 기반 지식 보강.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Jira MCP Server</div>
+                        <div class="card-content">
+                            프로젝트 이슈 연동 · 스프린트 상태 조회 · 이슈 자동 생성/업데이트 · 에픽-스토리 매핑.
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-title">SAP MCP Server</div>
+                        <div class="card-content">
+                            비즈니스 로직 참조 · 데이터 모델 조회 · RFC/BAPI 인터페이스 문서. 도메인 컨텍스트 제공.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">SonarQube MCP</div>
+                        <div class="card-content">
+                            코드 품질 메트릭 · 보안 취약점 리포트 · 기술 부채 분석 · 커버리지 데이터 조회.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">사내 DB MCP</div>
+                        <div class="card-content">
+                            테이블 스키마 조회 · 샘플 데이터 참조 · 쿼리 검증. 읽기 전용 접근으로 보안 유지.
+                        </div>
+                    </div>
+                </div>
+                <div class="highlight-box" style="margin-top: 20px;">
+                    <div class="highlight-text" style="font-size: 15px;">
+                        <strong>MCP (Model Context Protocol)</strong> — AI 에이전트가 외부 도구와 데이터 소스에 표준화된 방식으로 접근하는 프로토콜. 사내 시스템마다 MCP Server를 구현하면 에이전트가 <strong>코드 생성 시 실시간으로 사내 컨텍스트를 참조</strong>하여 도메인 정확도를 극대화합니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: 4단계 롤아웃 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">11 — ROLLOUT</div>
+                <div class="slide-title">4단계 롤아웃 전략</div>
+                <div class="slide-subtitle">파일럿에서 전사 플랫폼까지 단계적 확산</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">P1</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">파일럿 (1-3개월) <span class="tag tag-cyan">MVP</span></div>
+                                <div class="timeline-desc">
+                                    1개 팀 (5명) · 버그 수정 + 테스트 생성 자동화<br>
+                                    GitLab Runner + Claude API 연동<br>
+                                    목표: 주 20건 이슈 자동 처리
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">P2</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">확장 (4-6개월) <span class="tag tag-green">Scale</span></div>
+                                <div class="timeline-desc">
+                                    3개 팀 (15명) · 기능 구현 보조 추가<br>
+                                    MCP 연동 (Jira, Confluence)<br>
+                                    목표: 월 200건 이슈 자동 처리
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">P3</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">부서 확대 (7-12개월) <span class="tag tag-orange">Dept</span></div>
+                                <div class="timeline-desc">
+                                    개발 본부 전체 (50명+) · 보안 패치 자동화 추가<br>
+                                    SAP/DB MCP 연동 · 커스텀 에이전트 개발<br>
+                                    목표: 월 500건 자동 처리
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">P4</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">전사 플랫폼 (12개월+) <span class="tag tag-red">Enterprise</span></div>
+                                <div class="timeline-desc">
+                                    그룹사 전체 개발 조직 · 셀프 서비스 에이전트 마켓<br>
+                                    커스텀 에이전트 빌더 · 멀티 모델 지원<br>
+                                    목표: 전사 AI 개발 플랫폼
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kpi-grid" style="margin-top: 20px;">
+                    <div class="kpi-box">
+                        <div class="kpi-value">5명</div>
+                        <div class="kpi-label">P1: 파일럿 팀</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-value">15명</div>
+                        <div class="kpi-label">P2: 확장</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-value">50+명</div>
+                        <div class="kpi-label">P3: 본부</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-value">전사</div>
+                        <div class="kpi-label">P4: 플랫폼</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: 리스크 관리 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">12 — RISK</div>
+                <div class="slide-title">리스크 관리</div>
+                <div class="slide-subtitle">예상 리스크와 완화 전략</div>
+            </div>
+            <div class="slide-content">
+                <table class="table" style="margin-bottom: 20px;">
+                    <thead>
+                        <tr><th style="width:18%">리스크</th><th style="width:8%">확률</th><th style="width:8%">영향</th><th style="width:66%">완화 전략</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color:#f87171">AI 생성 코드 결함</strong></td>
+                            <td><span class="tag tag-red">높음</span></td>
+                            <td><span class="tag tag-red">높음</span></td>
+                            <td>필수 CI 파이프라인 (테스트 + SAST) + 휴먼 코드 리뷰 게이트 + 프로덕션 직접 머지 금지</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#ff6b00">보안 취약점 주입</strong></td>
+                            <td><span class="tag tag-orange">중간</span></td>
+                            <td><span class="tag tag-red">높음</span></td>
+                            <td>SAST/DAST 필수 통과 + 시크릿 스캔 + 네트워크 격리 샌드박스 + 보안팀 리뷰 게이트</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#ff6b00">API 비용 초과</strong></td>
+                            <td><span class="tag tag-orange">중간</span></td>
+                            <td><span class="tag tag-cyan">중간</span></td>
+                            <td>Haiku 우선 전략 + 월간 비용 상한 + 프롬프트 캐싱 + 사용량 모니터링 대시보드</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">개발자 저항</strong></td>
+                            <td><span class="tag tag-cyan">중간</span></td>
+                            <td><span class="tag tag-cyan">중간</span></td>
+                            <td>파일럿 성공 사례 공유 + 점진적 도입 + AI는 보조 도구 포지셔닝 + 챔피언 개발자 육성</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">모델 의존성</strong></td>
+                            <td><span class="tag tag-cyan">낮음</span></td>
+                            <td><span class="tag tag-cyan">중간</span></td>
+                            <td>멀티 모델 아키텍처 (Claude + vLLM 폴백) + model_version 태깅 + 프롬프트 GitOps 관리</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="highlight-box">
+                    <div class="highlight-text" style="font-size: 15px;">
+                        <strong>핵심 원칙:</strong> AI 생성 코드는 반드시 CI 파이프라인 + 휴먼 리뷰를 통과해야 머지. <strong>프로덕션 직접 배포 금지</strong>. 모든 에이전트 행동은 감사 로그로 추적. 에이전트는 보조 도구, <strong>최종 판단은 개발자</strong>가 합니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: 90일 실행 로드맵 -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-header">
+                <div class="slide-number">13 — ROADMAP</div>
+                <div class="slide-title">90일 실행 로드맵</div>
+                <div class="slide-subtitle">인프라 구축부터 정식 운영까지</div>
+            </div>
+            <div class="slide-content">
+                <table class="table" style="margin-bottom: 20px;">
+                    <thead>
+                        <tr><th>주차</th><th>목표</th><th>산출물</th><th>성공 기준</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color:#00aad2">1-2</strong></td>
+                            <td>인프라 구축 + 보안 검증</td>
+                            <td>GitLab Runner 구성, 샌드박스 Docker, 보안 검증</td>
+                            <td>보안팀 감사 통과</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">3-4</strong></td>
+                            <td>Agent Pipeline v0.1</td>
+                            <td>Issue Analyzer + Code Generator 작동, CI 연동</td>
+                            <td>버그 수정 자동화 정확도 >80%</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">5-6</strong></td>
+                            <td>파일럿 시작</td>
+                            <td>1개 팀 온보딩, 버그 수정 + 테스트 생성 자동화</td>
+                            <td>주 10건 자동 처리</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">7-8</strong></td>
+                            <td>파일럿 확대</td>
+                            <td>Quality Gate 강화, MCP 연동 (Jira, Confluence)</td>
+                            <td>주 20건 자동 처리</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">9-10</strong></td>
+                            <td>품질 최적화</td>
+                            <td>피드백 반영, 프롬프트 튜닝, 에이전트 정확도 향상</td>
+                            <td>개발자 만족도 >4.0</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#00aad2">11-12</strong></td>
+                            <td>정식 운영 전환</td>
+                            <td>운영 매뉴얼, KPI 대시보드, 확장 계획</td>
+                            <td>월 80건 자동 처리</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="grid-3">
+                    <div class="stats-box">
+                        <div class="stats-number">4주</div>
+                        <div class="stats-label">MVP 완성</div>
+                    </div>
+                    <div class="stats-box">
+                        <div class="stats-number">8주</div>
+                        <div class="stats-label">파일럿 안정화</div>
+                    </div>
+                    <div class="stats-box">
+                        <div class="stats-number">12주</div>
+                        <div class="stats-label">정식 운영</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Closing -->
+        <div class="slide">
+            <div class="hmg-logo">Hyundai AutoEver</div>
+            <div class="slide-content" style="justify-content: center; text-align: center; align-items: center;">
+                <div class="cover-badge">GITLAB AGENTIC WORKFLOWS</div>
+                <div class="cover-title" style="font-size: 46px;">
+                    개발자의 시간을<br><span class="accent">창의적 문제 해결</span>에 집중시킵니다
+                </div>
+                <div style="font-size: 20px; color: #e0e0e0; line-height: 1.7; margin-bottom: 40px; max-width: 700px;">
+                    반복 코딩은 AI 에이전트가 처리하고,<br>
+                    개발자는 설계, 아키텍처, 비즈니스 로직에 집중합니다.
+                </div>
+                <div class="grid-3" style="max-width: 600px; gap: 30px;">
+                    <div>
+                        <div style="font-size: 32px; font-weight: 700; color: #00aad2; margin-bottom: 4px;">4주</div>
+                        <div style="font-size: 13px; color: #94a3b8;">MVP 완성</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 32px; font-weight: 700; color: #00aad2; margin-bottom: 4px;">8주</div>
+                        <div style="font-size: 13px; color: #94a3b8;">파일럿 시작</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 32px; font-weight: 700; color: #00aad2; margin-bottom: 4px;">12주</div>
+                        <div style="font-size: 13px; color: #94a3b8;">정식 운영</div>
+                    </div>
+                </div>
+                <div style="margin-top: 40px; font-size: 15px; color: #475569;">
+                    AI 에이전트는 보조 도구, <strong style="color:#00aad2;">최종 판단은 개발자</strong>가 합니다.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" onclick="changeSlide(-1)">&#8592;</button>
+        <button class="nav-btn" onclick="changeSlide(1)">&#8594;</button>
+    </div>
+    <div class="slide-counter">1 / 16</div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const counter = document.querySelector('.slide-counter');
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            counter.textContent = `${currentSlide + 1} / ${slides.length}`;
+        }
+
+        function changeSlide(dir) { showSlide(currentSlide + dir); }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+            if (e.key === 'Home') showSlide(0);
+            if (e.key === 'End') showSlide(slides.length - 1);
+        });
+    </script>
+</body>
+</html>
