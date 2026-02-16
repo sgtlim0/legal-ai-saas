@@ -37,9 +37,9 @@
 
         .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 40px;
-            max-width: 1100px;
+            max-width: 1400px;
             width: 100%;
         }
 
@@ -62,6 +62,7 @@
         }
         .card:nth-child(1)::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
         .card:nth-child(2)::before { background: linear-gradient(90deg, #00aad2, #38d9f5); }
+        .card:nth-child(3)::before { background: linear-gradient(90deg, #002c5f, #00aad2); }
         .card:hover {
             background: rgba(255, 255, 255, 0.08);
             border-color: rgba(255, 255, 255, 0.2);
@@ -86,6 +87,11 @@
         .card:nth-child(2) .card-badge {
             background: rgba(0, 170, 210, 0.2);
             color: #38d9f5;
+            border: 1px solid rgba(0, 170, 210, 0.3);
+        }
+        .card:nth-child(3) .card-badge {
+            background: rgba(0, 44, 95, 0.4);
+            color: #00aad2;
             border: 1px solid rgba(0, 170, 210, 0.3);
         }
 
@@ -144,6 +150,13 @@
         }
         .card:nth-child(2) .link-html:hover { background: rgba(0, 170, 210, 0.3); }
 
+        .card:nth-child(3) .link-html {
+            background: rgba(0, 44, 95, 0.3);
+            border: 1px solid rgba(0, 170, 210, 0.3);
+            color: #00aad2;
+        }
+        .card:nth-child(3) .link-html:hover { background: rgba(0, 170, 210, 0.3); }
+
         .footer {
             margin-top: 60px;
             text-align: center;
@@ -184,6 +197,16 @@
                 <a href="/confluence-strategy/" class="card-link link-html">Presentation</a>
                 <a href="/confluence-strategy/Confluence-AI-Strategy.md" class="card-link link-md">Markdown</a>
                 <a href="/confluence-strategy/Confluence-AI-Strategy.pdf" class="card-link link-pdf">PDF</a>
+            </div>
+        </div>
+        <div class="card">
+            <span class="card-badge">H Chat</span>
+            <h2>H Chat 컨트리뷰터 프로젝트 - AI 실행 조직 구축 전략</h2>
+            <p>30명 컨트리뷰터 · ROI 7.2x · 86% 시간 절감 · 3개년 로드맵. R.U.N.SHOT 실행 문화와 H Chat을 결합한 현대오토에버 AI 실행 조직 구축 전략.</p>
+            <div class="card-links">
+                <a href="/hchat-contributor/" class="card-link link-html">Presentation</a>
+                <a href="/hchat-contributor/HChat-Contributor.md" class="card-link link-md">Markdown</a>
+                <a href="/hchat-contributor/HChat-Contributor.pdf" class="card-link link-pdf">PDF</a>
             </div>
         </div>
     </div>
