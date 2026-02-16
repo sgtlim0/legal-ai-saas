@@ -1,66 +1,66 @@
-# LegalAI - AI Marketing Automation for Law Firms
+# LegalAI - 미국 로펌 대상 AI 마케팅 자동화 플랫폼
 
-> 6-Agent Pipeline · $10B+ Market · Path to $1M ARR in 9 Months
+> 6-에이전트 파이프라인 · $10B+ 시장 규모 · 9개월 내 $1M ARR 달성 경로
 
-**AI Automation Strategy Report | 2025. 02**
-
----
-
-## 01. Executive Summary
-
-| Metric | Value |
-|--------|-------|
-| Market Size | $10B+ |
-| Gross Margin | 85%+ |
-| Path to $1M ARR | 9 Months |
-
-LegalAI is a multi-agent AI pipeline that automates the entire marketing funnel for US law firms — from search intent analysis to lead conversion and follow-up automation. Built on Claude API with compliance-first architecture.
+**AI 자동화 전략 보고서 | 2025. 02**
 
 ---
 
-## 02. The Problem
+## 01. 요약
 
-### Law Firms Waste 70% of Ad Spend
+| 지표 | 값 |
+|------|-----|
+| 시장 규모 | $10B+ |
+| 매출총이익률 | 85%+ |
+| $1M ARR 달성 | 9개월 |
 
-| Metric | Value |
-|--------|-------|
-| Average CPC for PI Keywords | $87 |
-| Industry Conversion Rate | 3.1% |
-| Average Lead Response Time | 47 hours |
-| Wasted Ad Spend | 70% |
-
-**The Pain:** For every **$10,000** spent on Google Ads, law firms lose ~$7,000 to slow response, poor follow-up, and generic landing pages.
-
-**Root Causes:**
-- Generic landing pages (no jurisdiction targeting)
-- Manual lead response (hours, not minutes)
-- No AI-driven follow-up sequences
-- Zero conversion optimization
-
-> **Opportunity:** AI can automate the entire funnel from click to consultation.
+LegalAI는 미국 로펌의 마케팅 퍼널 전체를 자동화하는 멀티 에이전트 AI 파이프라인입니다. 검색 의도 분석부터 리드 전환, 후속 자동화까지 — Claude API 기반의 컴플라이언스 우선 아키텍처로 구축되었습니다.
 
 ---
 
-## 03. The Solution: 6-Agent AI Pipeline
+## 02. 문제 정의
+
+### 로펌의 광고비 70%가 낭비되고 있습니다
+
+| 지표 | 값 |
+|------|-----|
+| PI 키워드 평균 CPC | $87 |
+| 업계 전환율 | 3.1% |
+| 평균 리드 응답 시간 | 47시간 |
+| 낭비되는 광고비 | 70% |
+
+**핵심 문제:** Google Ads에 **$10,000**을 지출할 때마다, 로펌은 느린 응답, 부실한 후속 관리, 범용 랜딩 페이지로 인해 약 $7,000을 손실합니다.
+
+**근본 원인:**
+- 범용 랜딩 페이지 (관할권 타겟팅 없음)
+- 수동 리드 응답 (분 단위가 아닌 시간 단위)
+- AI 기반 후속 시퀀스 부재
+- 전환 최적화 전무
+
+> **기회:** AI가 클릭에서 상담 예약까지 전체 퍼널을 자동화할 수 있습니다.
+
+---
+
+## 03. 솔루션: 6-에이전트 AI 파이프라인
 
 ```
-Intent Analyzer → Landing Optimizer → Lead Qualifier → Conversion Script → Follow-up Auto → Revenue Report
-   (Haiku)          (Sonnet)           (Haiku)          (Sonnet)           (Haiku)         (Opus/monthly)
+의도 분석기 → 랜딩 최적화 → 리드 검증 → 전환 스크립트 → 후속 자동화 → 매출 리포트
+  (Haiku)      (Sonnet)       (Haiku)      (Sonnet)        (Haiku)      (Opus/월간)
 ```
 
-### Quality Gates
-- Compliance check between every stage
-- State Bar Rule verification (Rule 7.01+)
-- TCPA / CAN-SPAM validation
-- Mandatory attorney review gate
+### 품질 게이트
+- 모든 단계 간 컴플라이언스 검사
+- 주 변호사 협회 규칙 검증 (Rule 7.01+)
+- TCPA / CAN-SPAM 유효성 검사
+- 필수 변호사 검토 게이트
 
-### JSON Pipeline
-- Structured output: Agent N feeds directly into Agent N+1
-- Fully typed interfaces (TypeScript)
-- Compliance status at every stage
-- Audit trail for regulatory compliance
+### JSON 파이프라인
+- 구조화된 출력: Agent N의 결과가 Agent N+1로 직접 전달
+- 완전 타입 인터페이스 (TypeScript)
+- 모든 단계에서 컴플라이언스 상태 추적
+- 규제 준수를 위한 감사 추적
 
-**Example Output (Agent 1 → Agent 2):**
+**출력 예시 (Agent 1 → Agent 2):**
 ```json
 {
   "keyword": "car accident lawyer houston",
@@ -73,212 +73,212 @@ Intent Analyzer → Landing Optimizer → Lead Qualifier → Conversion Script �
 
 ---
 
-## 04. Architecture: Tech Stack & API Map
+## 04. 아키텍처: 기술 스택 & API 구조
 
-### Frontend & Infrastructure
-Next.js 16 + TypeScript + Tailwind CSS · Vercel deployment · Clerk Auth · PostHog + Sentry monitoring
+### 프론트엔드 & 인프라
+Next.js 16 + TypeScript + Tailwind CSS · Vercel 배포 · Clerk 인증 · PostHog + Sentry 모니터링
 
-### AI Layer - Claude API (Multi-Model)
-- **Haiku:** Intent Scoring, Lead Qualification, Follow-up (high volume, low cost)
-- **Sonnet:** Landing Pages, Conversion Scripts (content quality)
-- **Opus:** Monthly Revenue Analysis (deep reasoning)
+### AI 레이어 - Claude API (멀티 모델)
+- **Haiku:** 의도 스코어링, 리드 검증, 후속 관리 (고볼륨, 저비용)
+- **Sonnet:** 랜딩 페이지, 전환 스크립트 (콘텐츠 품질)
+- **Opus:** 월간 매출 분석 (심층 추론)
 
-### Backend Services
+### 백엔드 서비스
 - Next.js API Routes + BullMQ
 - PostgreSQL + Prisma ORM
-- Stripe (subscription + usage billing)
-- Row-level security (multi-tenant)
+- Stripe (구독 + 사용량 과금)
+- 행 수준 보안 (멀티 테넌트)
 
-### Integrations
-- Google Ads API (ads data)
-- Twilio ($0.0079/msg) + SendGrid
+### 외부 연동
+- Google Ads API (광고 데이터)
+- Twilio ($0.0079/건) + SendGrid
 - HubSpot CRM + Calendly
-- Compliance Engine (per-state rules)
+- 컴플라이언스 엔진 (주별 규칙)
 
 ---
 
-## 05. Revenue Model: Three-Tier Pricing
+## 05. 수익 모델: 3단계 요금제
 
-### Starter — $497/mo
-**Target:** Solo Practitioners
-- 1,000 AI operations/mo
-- 3 landing pages
-- 500 SMS/email sends
-- Basic monthly report
-- Email support
-- **Gross Margin: 78%**
+### Starter — $497/월
+**대상:** 개인 변호사
+- 1,000 AI 작업/월
+- 3개 랜딩 페이지
+- 500건 SMS/이메일 발송
+- 기본 월간 리포트
+- 이메일 지원
+- **매출총이익률: 78%**
 
-### Growth — $1,497/mo ⭐ BEST VALUE
-**Target:** 2-10 Attorney Firms
-- 5,000 AI operations/mo
-- 10 landing pages
-- 2,000 SMS/email sends
-- Auto A/B testing
-- Weekly reports
-- Priority support
-- **LTV:CAC Ratio: 11.3x**
+### Growth — $1,497/월 (최고 가성비)
+**대상:** 2-10인 로펌
+- 5,000 AI 작업/월
+- 10개 랜딩 페이지
+- 2,000건 SMS/이메일 발송
+- 자동 A/B 테스트
+- 주간 리포트
+- 우선 지원
+- **LTV:CAC 비율: 11.3x**
 
-### Enterprise — $4,497/mo
-**Target:** 10+ Attorney Firms
-- Unlimited AI operations
-- Unlimited landing pages
-- 10,000 SMS/email sends
-- Dedicated account manager
-- Real-time dashboard
-- Custom API access
-- **Lifetime Value: $101K**
+### Enterprise — $4,497/월
+**대상:** 10인 이상 로펌
+- 무제한 AI 작업
+- 무제한 랜딩 페이지
+- 10,000건 SMS/이메일 발송
+- 전담 어카운트 매니저
+- 실시간 대시보드
+- 커스텀 API 접근
+- **고객 생애 가치: $101K**
 
 ---
 
-## 06. Unit Economics: Path to $1M ARR
+## 06. 단위 경제학: $1M ARR 달성 경로
 
-### MRR Growth Projection
+### MRR 성장 전망
 
-| Month | MRR |
-|-------|-----|
-| Month 1 | $2K |
-| Month 3 | $13K |
-| Month 6 | $56K |
-| Month 9 | $89K |
-| Month 12 | $128K |
+| 시점 | MRR |
+|------|-----|
+| 1개월 | $2K |
+| 3개월 | $13K |
+| 6개월 | $56K |
+| 9개월 | $89K |
+| 12개월 | $128K |
 
-**Year 1 ARR: $1,534,068**
+**1년차 ARR: $1,534,068**
 
-### Key Metrics (Month 12)
+### 핵심 지표 (12개월 시점)
 
-| Metric | Value |
-|--------|-------|
-| Total Customers | 53 |
-| Net Margin | 46% |
-| Blended CAC | $1,980 |
-| Blended LTV | $19,437 |
+| 지표 | 값 |
+|------|-----|
+| 총 고객 수 | 53 |
+| 순이익률 | 46% |
+| 혼합 CAC | $1,980 |
+| 혼합 LTV | $19,437 |
 | LTV:CAC | 9.8x |
-| Payback Period | 2.0 months |
-| Gross Margin | 85-90% |
-| Year 1 Net Profit | $918K |
+| 투자 회수 기간 | 2.0개월 |
+| 매출총이익률 | 85-90% |
+| 1년차 순이익 | $918K |
 
 ---
 
-## 07. Cost Structure & AI Cost Efficiency
+## 07. 비용 구조 & AI 비용 효율성
 
-### Monthly Costs (at Month 12)
+### 월간 비용 (12개월 시점)
 
-| Item | Cost | % of Revenue |
-|------|------|-------------|
+| 항목 | 비용 | 매출 대비 |
+|------|------|----------|
 | AI API (Claude) | $8,500 | 6.6% |
-| Infrastructure | $2,000 | 1.6% |
-| SaaS Tools | $3,000 | 2.3% |
-| Team (3 people) | $35,000 | 27.4% |
-| Marketing/Sales | $15,000 | 11.7% |
-| Legal Counsel | $5,000 | 3.9% |
-| **Total** | **$68,500** | **53.6%** |
-| **Net Profit** | **$59,339** | **46.4%** |
+| 인프라 | $2,000 | 1.6% |
+| SaaS 도구 | $3,000 | 2.3% |
+| 팀 (3명) | $35,000 | 27.4% |
+| 마케팅/영업 | $15,000 | 11.7% |
+| 법률 자문 | $5,000 | 3.9% |
+| **합계** | **$68,500** | **53.6%** |
+| **순이익** | **$59,339** | **46.4%** |
 
-### AI Cost per 1,000 Runs
+### AI 비용 (1,000회 실행 기준)
 
-| Agent | Model | Cost |
-|-------|-------|------|
-| Intent Analyzer | Haiku | $0.50 |
-| Landing Optimizer | Sonnet | $4.50 |
-| Lead Qualifier | Haiku | $0.50 |
-| Conversion Script | Sonnet | $4.50 |
-| Follow-up Auto | Haiku | $0.50 |
-| Revenue Report | Opus | $45.00 |
+| 에이전트 | 모델 | 비용 |
+|----------|------|------|
+| 의도 분석기 | Haiku | $0.50 |
+| 랜딩 최적화 | Sonnet | $4.50 |
+| 리드 검증 | Haiku | $0.50 |
+| 전환 스크립트 | Sonnet | $4.50 |
+| 후속 자동화 | Haiku | $0.50 |
+| 매출 리포트 | Opus | $45.00 |
 
-**Strategy:** Haiku for high-volume scoring (cheap + fast). Sonnet for quality content generation. Opus reserved for monthly deep analysis only.
-
----
-
-## 08. Global Expansion: 4-Phase Strategy
-
-### Phase 1: US Market (Month 1-12)
-- Texas, Florida, California
-- PI, Immigration, DUI
-- Target: $1.5M ARR
-- Team: 5 people
-
-### Phase 2: English Markets (Month 12-24)
-- UK, Canada, Australia
-- Local compliance engines
-- Target: $5M ARR
-- Team: 15 people
-
-### Phase 3: Multi-Language (Month 24-36)
-- Germany, Japan, Korea
-- Prompt chain rebuild
-- Target: $15M ARR
-- Team: 35 people
-
-### Phase 4: SaaS Platform (Month 24+)
-- Self-service onboarding
-- Template marketplace
-- Target: $30M+ ARR
-- Team: 60+ people
-
-**ARR Trajectory:** $1.5M → $5M → $15M → $30M+
+**전략:** Haiku는 고볼륨 스코어링에 활용 (저렴 + 빠름). Sonnet은 품질 높은 콘텐츠 생성. Opus는 월간 심층 분석에만 한정 사용.
 
 ---
 
-## 09. Risk Management
+## 08. 글로벌 확장: 4단계 전략
 
-### Top Risks
+### Phase 1: 미국 시장 (1-12개월)
+- 텍사스, 플로리다, 캘리포니아
+- PI(인신상해), 이민, DUI
+- 목표: $1.5M ARR
+- 팀: 5명
 
-| Risk | Probability | Impact | Mitigation |
-|------|------------|--------|------------|
-| Bar rule violation | High | High | Compliance engine + attorney review gate |
-| Token cost explosion | Medium | High | Per-customer cap 25% COGS, Haiku-first |
-| Data breach | Low | High | Row-level security, SOC2, $1M cyber insurance |
-| TCPA violation | Medium | High | Explicit opt-in, Twilio compliance bundle |
-| Founder dependency | High | Medium | 2nd hire at month 6, full documentation |
-| Competitor entry | Medium | Medium | Niche specialization + territory exclusivity |
+### Phase 2: 영어권 시장 (12-24개월)
+- 영국, 캐나다, 호주
+- 현지 컴플라이언스 엔진
+- 목표: $5M ARR
+- 팀: 15명
 
-### Critical Guardrails
+### Phase 3: 다국어 확장 (24-36개월)
+- 독일, 일본, 한국
+- 프롬프트 체인 재구축
+- 목표: $15M ARR
+- 팀: 35명
 
-**NEVER:** Legal advice, document drafting, case analysis, practice of law in any form
+### Phase 4: SaaS 플랫폼 (24개월+)
+- 셀프 서비스 온보딩
+- 템플릿 마켓플레이스
+- 목표: $30M+ ARR
+- 팀: 60명 이상
 
-**ALWAYS:** Attorney review gate, compliance check, opt-in verification, jurisdiction validation
-
-**MONITOR:** AI cost/revenue <25%, compliance pass >95%, churn <5%
-
-### Before Writing Code
-1. Legal ethics counsel review
-2. 100 law firm demand survey
-3. Compliance engine first
-4. 3 free pilot customers
-
----
-
-## 10. 90-Day Roadmap
-
-| Week | Objective | Deliverables | Go/No-Go |
-|------|-----------|-------------|----------|
-| 1-2 | MVP Design + Demand Validation | Landing page, 100-firm email list, price A/B test | Email response >3% |
-| 3-4 | AI Pipeline v0.1 | Agents 1-3 working, compliance gate, prompt chains | Compliance pass >95% |
-| 5-6 | Pilot Customers | 3 free/discounted pilot contracts signed | 3 firms signed |
-| 7-8 | Pilot Execution | Conversion rate data, AI quality monitoring | Conversion +30% |
-| 9-10 | Paid Launch | 2+ paid conversions, case study, sales process | MRR >$5,000 |
-| 11-12 | Scale Start | 5+ paid customers, outbound system, 2nd practice area | MRR >$15,000 |
-
-### Decision Framework
-- **Continue:** 5+ customers, MRR >$15K, NPS >40
-- **Pivot:** 2-4 customers, MRR $5-15K
-- **Stop:** 0-1 customers, MRR <$5K
+**ARR 성장 궤적:** $1.5M → $5M → $15M → $30M+
 
 ---
 
-## 11. Next Steps
+## 09. 리스크 관리
 
-**The $10B legal marketing industry is ready for AI disruption.**
+### 주요 리스크
 
-First mover advantage is real. Territory exclusivity is the moat. Compliance-first approach is the trust builder.
+| 리스크 | 발생 확률 | 영향도 | 완화 전략 |
+|--------|----------|--------|----------|
+| 변호사 협회 규칙 위반 | 높음 | 높음 | 컴플라이언스 엔진 + 변호사 검토 게이트 |
+| 토큰 비용 폭증 | 중간 | 높음 | 고객당 COGS 25% 상한, Haiku 우선 |
+| 데이터 유출 | 낮음 | 높음 | 행 수준 보안, SOC2, $1M 사이버 보험 |
+| TCPA 위반 | 중간 | 높음 | 명시적 수신 동의, Twilio 컴플라이언스 번들 |
+| 창업자 의존 | 높음 | 중간 | 6개월 차 2번째 채용, 완전한 문서화 |
+| 경쟁사 진입 | 중간 | 중간 | 니치 전문화 + 지역 독점권 |
 
-| Milestone | Timeline |
-|-----------|----------|
-| Legal counsel + demand survey | Week 1 |
-| AI pipeline v0.1 live | Week 4 |
-| $15K MRR target | Week 12 |
+### 핵심 가드레일
+
+**절대 금지:** 법률 자문, 문서 작성, 사건 분석, 어떤 형태로든 법률 업무 수행
+
+**항상 실행:** 변호사 검토 게이트, 컴플라이언스 검사, 수신 동의 확인, 관할권 검증
+
+**모니터링:** AI 비용/매출 <25%, 컴플라이언스 통과율 >95%, 이탈률 <5%
+
+### 코드 작성 전 필수 사항
+1. 법률 윤리 자문 검토
+2. 100개 로펌 수요 조사
+3. 컴플라이언스 엔진 우선 구축
+4. 3개 무료 파일럿 고객 확보
 
 ---
 
-*LegalAI — AI Marketing Automation for Law Firms*
-*Built with Claude Code Multi-Agent Pipeline*
+## 10. 90일 로드맵
+
+| 주차 | 목표 | 산출물 | 진행/중단 기준 |
+|------|------|--------|---------------|
+| 1-2 | MVP 설계 + 수요 검증 | 랜딩 페이지, 100개 로펌 이메일 리스트, 가격 A/B 테스트 | 이메일 응답률 >3% |
+| 3-4 | AI 파이프라인 v0.1 | 에이전트 1-3 작동, 컴플라이언스 게이트, 프롬프트 체인 | 컴플라이언스 통과율 >95% |
+| 5-6 | 파일럿 고객 확보 | 무료/할인 파일럿 계약 3건 체결 | 3개 로펌 계약 |
+| 7-8 | 파일럿 실행 | 전환율 데이터, AI 품질 모니터링 | 전환율 +30% |
+| 9-10 | 유료 출시 | 2건 이상 유료 전환, 사례 연구, 영업 프로세스 | MRR >$5,000 |
+| 11-12 | 확장 시작 | 5건 이상 유료 고객, 아웃바운드 시스템, 2번째 업무 분야 | MRR >$15,000 |
+
+### 의사결정 프레임워크
+- **계속 진행:** 5건 이상 고객, MRR >$15K, NPS >40
+- **피봇:** 2-4건 고객, MRR $5-15K
+- **중단:** 0-1건 고객, MRR <$5K
+
+---
+
+## 11. 다음 단계
+
+**$10B 규모의 법률 마케팅 산업이 AI 혁신을 기다리고 있습니다.**
+
+선점 효과는 실제로 존재합니다. 지역 독점권이 진입 장벽입니다. 컴플라이언스 우선 접근법이 신뢰를 구축합니다.
+
+| 마일스톤 | 일정 |
+|----------|------|
+| 법률 자문 + 수요 조사 | 1주차 |
+| AI 파이프라인 v0.1 라이브 | 4주차 |
+| $15K MRR 목표 | 12주차 |
+
+---
+
+*LegalAI — 미국 로펌 대상 AI 마케팅 자동화 플랫폼*
+*Claude Code 멀티 에이전트 파이프라인으로 구축*

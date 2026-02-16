@@ -1,35 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LegalAI - AI Marketing Automation for Law Firms</title>
+    <title>LegalAI - 미국 로펌 대상 AI 마케팅 자동화 플랫폼</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
             background: #000;
             color: #fff;
             overflow: hidden;
         }
 
-        .presentation-container {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-        }
+        .presentation-container { width: 100vw; height: 100vh; position: relative; }
 
         .slide {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
+            width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0;
             display: none;
             background: linear-gradient(135deg, #0f1b2d 0%, #0a1628 100%);
             padding: 60px 80px;
@@ -52,121 +41,49 @@
         .brand-green { color: #10b981; }
         .brand-red { color: #ef4444; }
         .brand-yellow { color: #f59e0b; }
-        .brand-white { color: #ffffff; }
-        .brand-gray { color: #e0e0e0; }
 
         /* Slide Components */
         .slide-header { margin-bottom: 40px; }
+        .slide-number { font-size: 14px; color: #3b82f6; margin-bottom: 10px; font-weight: 600; }
+        .slide-title { font-size: 48px; font-weight: 700; color: #fff; margin-bottom: 10px; line-height: 1.2; }
+        .slide-subtitle { font-size: 24px; color: #3b82f6; font-weight: 400; }
+        .slide-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 
-        .slide-number {
-            font-size: 14px;
-            color: #3b82f6;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .slide-title {
-            font-size: 48px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 10px;
-            line-height: 1.2;
-        }
-
-        .slide-subtitle {
-            font-size: 24px;
-            color: #3b82f6;
-            font-weight: 400;
-        }
-
-        .slide-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        /* Logo */
         .brand-logo {
-            position: absolute;
-            top: 40px;
-            right: 80px;
-            font-size: 28px;
-            font-weight: 700;
-            color: #3b82f6;
-            letter-spacing: 2px;
+            position: absolute; top: 40px; right: 80px;
+            font-size: 28px; font-weight: 700; color: #3b82f6; letter-spacing: 2px;
         }
 
         /* Navigation */
         .navigation {
-            position: fixed;
-            bottom: 40px;
-            right: 80px;
-            display: flex;
-            gap: 15px;
-            z-index: 1000;
+            position: fixed; bottom: 40px; right: 80px;
+            display: flex; gap: 15px; z-index: 1000;
         }
-
         .nav-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(59, 130, 246, 0.2);
-            border: 2px solid #3b82f6;
-            color: #3b82f6;
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(59, 130, 246, 0.2); border: 2px solid #3b82f6;
+            color: #3b82f6; font-size: 24px; cursor: pointer;
+            transition: all 0.3s; display: flex; align-items: center; justify-content: center;
         }
-
-        .nav-btn:hover {
-            background: #3b82f6;
-            color: #0a1628;
-            transform: scale(1.1);
-        }
+        .nav-btn:hover { background: #3b82f6; color: #0a1628; transform: scale(1.1); }
 
         .slide-counter {
-            position: fixed;
-            bottom: 50px;
-            left: 80px;
-            font-size: 16px;
-            color: #3b82f6;
-            z-index: 1000;
+            position: fixed; bottom: 50px; left: 80px;
+            font-size: 16px; color: #3b82f6; z-index: 1000;
         }
 
         .toolbar {
-            position: fixed;
-            top: 30px;
-            left: 40px;
-            display: flex;
-            gap: 10px;
-            z-index: 1000;
+            position: fixed; top: 30px; left: 40px;
+            display: flex; gap: 10px; z-index: 1000;
         }
-
         .toolbar-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-            background: rgba(59, 130, 246, 0.15);
-            border: 1.5px solid rgba(59, 130, 246, 0.4);
-            color: #3b82f6;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 44px; height: 44px; border-radius: 10px;
+            background: rgba(59, 130, 246, 0.15); border: 1.5px solid rgba(59, 130, 246, 0.4);
+            color: #3b82f6; font-size: 18px; cursor: pointer;
+            transition: all 0.3s; display: flex; align-items: center; justify-content: center;
             text-decoration: none;
         }
-
-        .toolbar-btn:hover {
-            background: rgba(59, 130, 246, 0.3);
-            border-color: #3b82f6;
-            transform: scale(1.05);
-        }
+        .toolbar-btn:hover { background: rgba(59, 130, 246, 0.3); border-color: #3b82f6; transform: scale(1.05); }
 
         /* Grid Layouts */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
@@ -177,302 +94,119 @@
         .card {
             background: rgba(255, 255, 255, 0.05);
             border-left: 4px solid #3b82f6;
-            padding: 30px;
-            border-radius: 8px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
+            padding: 30px; border-radius: 8px;
+            backdrop-filter: blur(10px); transition: all 0.3s;
         }
-
-        .card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-5px);
-            border-left-color: #60a5fa;
-        }
-
-        .card-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #3b82f6;
-            margin-bottom: 15px;
-        }
-
-        .card-content {
-            font-size: 16px;
-            line-height: 1.6;
-            color: #e0e0e0;
-        }
+        .card:hover { background: rgba(255, 255, 255, 0.08); transform: translateY(-5px); border-left-color: #60a5fa; }
+        .card-title { font-size: 22px; font-weight: 700; color: #3b82f6; margin-bottom: 15px; }
+        .card-content { font-size: 16px; line-height: 1.6; color: #e0e0e0; }
 
         /* Stats Box */
         .stats-box {
-            background: rgba(59, 130, 246, 0.1);
-            border: 2px solid #3b82f6;
-            padding: 20px 30px;
-            border-radius: 8px;
-            text-align: center;
+            background: rgba(59, 130, 246, 0.1); border: 2px solid #3b82f6;
+            padding: 20px 30px; border-radius: 8px; text-align: center;
         }
-
-        .stats-number {
-            font-size: 42px;
-            font-weight: 700;
-            color: #3b82f6;
-            margin-bottom: 5px;
-        }
-
-        .stats-label {
-            font-size: 16px;
-            color: #e0e0e0;
-        }
+        .stats-number { font-size: 42px; font-weight: 700; color: #3b82f6; margin-bottom: 5px; }
+        .stats-label { font-size: 16px; color: #e0e0e0; }
 
         /* Bullet Lists */
-        .bullet-list {
-            list-style: none;
-            padding-left: 0;
-        }
-
+        .bullet-list { list-style: none; padding-left: 0; }
         .bullet-list li {
-            font-size: 17px;
-            line-height: 1.8;
-            color: #e0e0e0;
-            margin-bottom: 12px;
-            padding-left: 30px;
-            position: relative;
+            font-size: 17px; line-height: 1.8; color: #e0e0e0;
+            margin-bottom: 12px; padding-left: 30px; position: relative;
         }
-
         .bullet-list li::before {
-            content: "\25B8";
-            position: absolute;
-            left: 0;
-            color: #3b82f6;
-            font-weight: 700;
+            content: "\25B8"; position: absolute; left: 0; color: #3b82f6; font-weight: 700;
         }
 
         /* Architecture Layers */
         .arch-layer {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 25px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #3b82f6;
+            background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 8px;
+            margin-bottom: 20px; border-left: 4px solid #3b82f6;
         }
-
-        .arch-layer-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #3b82f6;
-            margin-bottom: 10px;
-        }
-
-        .arch-layer-content {
-            font-size: 16px;
-            color: #e0e0e0;
-            line-height: 1.6;
-        }
+        .arch-layer-title { font-size: 20px; font-weight: 700; color: #3b82f6; margin-bottom: 10px; }
+        .arch-layer-content { font-size: 16px; color: #e0e0e0; line-height: 1.6; }
 
         /* KPI Grid */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-top: 20px;
-        }
-
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 20px; }
         .kpi-box {
-            background: rgba(59, 130, 246, 0.1);
-            padding: 25px;
-            border-radius: 8px;
-            border-top: 4px solid #3b82f6;
-            text-align: center;
+            background: rgba(59, 130, 246, 0.1); padding: 25px; border-radius: 8px;
+            border-top: 4px solid #3b82f6; text-align: center;
         }
-
-        .kpi-value {
-            font-size: 36px;
-            font-weight: 700;
-            color: #3b82f6;
-            margin-bottom: 10px;
-        }
-
-        .kpi-label {
-            font-size: 14px;
-            color: #e0e0e0;
-        }
+        .kpi-value { font-size: 36px; font-weight: 700; color: #3b82f6; margin-bottom: 10px; }
+        .kpi-label { font-size: 14px; color: #e0e0e0; }
 
         /* Data Table */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         .data-table th {
-            background: rgba(59, 130, 246, 0.2);
-            color: #3b82f6;
-            padding: 14px;
-            text-align: left;
-            font-weight: 700;
-            border-bottom: 2px solid #3b82f6;
-            font-size: 14px;
+            background: rgba(59, 130, 246, 0.2); color: #3b82f6;
+            padding: 14px; text-align: left; font-weight: 700;
+            border-bottom: 2px solid #3b82f6; font-size: 14px;
         }
-
         .data-table td {
-            padding: 14px;
-            color: #e0e0e0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 14px;
+            padding: 14px; color: #e0e0e0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-size: 14px;
         }
-
         .data-table tr:hover { background: rgba(255, 255, 255, 0.05); }
 
         /* Highlight Box */
         .highlight-box {
-            background: rgba(59, 130, 246, 0.15);
-            border: 2px solid #3b82f6;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            margin: 30px 0;
+            background: rgba(59, 130, 246, 0.15); border: 2px solid #3b82f6;
+            padding: 30px; border-radius: 12px; text-align: center; margin: 30px 0;
         }
-
-        .highlight-text {
-            font-size: 28px;
-            font-weight: 700;
-            color: #3b82f6;
-            line-height: 1.5;
-        }
+        .highlight-text { font-size: 28px; font-weight: 700; color: #3b82f6; line-height: 1.5; }
 
         /* Cover Slide */
-        .cover-slide {
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .cover-title {
-            font-size: 64px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 20px;
-        }
-
-        .cover-subtitle {
-            font-size: 32px;
-            color: #3b82f6;
-            margin-bottom: 60px;
-        }
-
-        .cover-info {
-            font-size: 18px;
-            color: #e0e0e0;
-            margin-top: 80px;
-        }
+        .cover-slide { justify-content: center; align-items: center; text-align: center; }
+        .cover-title { font-size: 64px; font-weight: 700; color: #fff; margin-bottom: 20px; }
+        .cover-subtitle { font-size: 32px; color: #3b82f6; margin-bottom: 60px; }
+        .cover-info { font-size: 18px; color: #e0e0e0; margin-top: 80px; }
 
         /* Pillar Cards */
         .pillar-card {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(15, 27, 45, 0.4) 100%);
-            border: 2px solid #3b82f6;
-            padding: 35px;
-            border-radius: 12px;
-            transition: all 0.3s;
+            border: 2px solid #3b82f6; padding: 35px; border-radius: 12px; transition: all 0.3s;
         }
-
-        .pillar-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
-        }
-
-        .pillar-number {
-            font-size: 60px;
-            font-weight: 700;
-            color: rgba(59, 130, 246, 0.3);
-            margin-bottom: 8px;
-        }
-
-        .pillar-title {
-            font-size: 26px;
-            font-weight: 700;
-            color: #3b82f6;
-            margin-bottom: 16px;
-        }
-
-        .pillar-desc {
-            font-size: 16px;
-            color: #e0e0e0;
-            line-height: 1.8;
-        }
+        .pillar-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3); }
+        .pillar-number { font-size: 60px; font-weight: 700; color: rgba(59, 130, 246, 0.3); margin-bottom: 8px; }
+        .pillar-title { font-size: 26px; font-weight: 700; color: #3b82f6; margin-bottom: 16px; }
+        .pillar-desc { font-size: 16px; color: #e0e0e0; line-height: 1.8; }
 
         /* Pipeline Flow */
         .pipeline-flow {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 20px 0;
+            display: flex; align-items: center; gap: 10px;
+            flex-wrap: wrap; justify-content: center; margin: 20px 0;
         }
-
         .pipeline-node {
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(59, 130, 246, 0.4);
-            border-radius: 12px;
-            padding: 18px 22px;
-            text-align: center;
-            min-width: 130px;
-            transition: all 0.3s;
+            border-radius: 12px; padding: 18px 22px;
+            text-align: center; min-width: 130px; transition: all 0.3s;
         }
-
-        .pipeline-node:hover {
-            border-color: #3b82f6;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.2);
-        }
-
+        .pipeline-node:hover { border-color: #3b82f6; transform: translateY(-3px); box-shadow: 0 5px 20px rgba(59, 130, 246, 0.2); }
         .pipeline-arrow { color: #3b82f6; font-size: 1.4rem; }
         .node-icon { font-size: 1.5rem; margin-bottom: 6px; }
         .node-name { font-size: 0.85rem; font-weight: 600; color: #fff; }
         .node-model { font-size: 0.7rem; color: #94a3b8; margin-top: 3px; }
 
         /* ROI Chart */
-        .roi-chart {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            height: 250px;
-            margin-top: 25px;
-        }
-
+        .roi-chart { display: flex; align-items: flex-end; justify-content: space-around; height: 250px; margin-top: 25px; }
         .roi-bar {
             width: 90px;
             background: linear-gradient(180deg, #3b82f6 0%, #0f1b2d 100%);
             border-radius: 8px 8px 0 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding-top: 15px;
-            color: #fff;
-            font-weight: 700;
-            position: relative;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: flex-start; padding-top: 15px;
+            color: #fff; font-weight: 700; position: relative;
         }
-
-        .roi-bar-label {
-            position: absolute;
-            bottom: -30px;
-            font-size: 14px;
-            color: #3b82f6;
-        }
+        .roi-bar-label { position: absolute; bottom: -30px; font-size: 14px; color: #3b82f6; }
 
         /* Code Block */
         .code-block {
-            background: #0d1117;
-            border: 1px solid #21262d;
-            border-radius: 8px;
-            padding: 18px;
-            font-family: 'JetBrains Mono', 'Fira Code', monospace;
-            font-size: 0.78rem;
-            line-height: 1.6;
-            overflow-x: auto;
-            color: #c9d1d9;
+            background: #0d1117; border: 1px solid #21262d; border-radius: 8px;
+            padding: 18px; font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.78rem; line-height: 1.6; overflow-x: auto; color: #c9d1d9;
         }
-
         .code-key { color: #79c0ff; }
         .code-str { color: #a5d6ff; }
         .code-num { color: #f2cc60; }
@@ -481,62 +215,18 @@
         /* Pricing Cards */
         .pricing-card {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(15, 27, 45, 0.3) 100%);
-            border: 2px solid rgba(59, 130, 246, 0.3);
-            border-radius: 16px;
-            padding: 35px 30px;
-            text-align: center;
-            transition: all 0.3s;
+            border: 2px solid rgba(59, 130, 246, 0.3); border-radius: 16px;
+            padding: 35px 30px; text-align: center; transition: all 0.3s;
         }
-
-        .pricing-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
-        }
-
-        .pricing-card.featured {
-            border-color: #3b82f6;
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
-        }
-
-        .pricing-tier {
-            font-size: 14px;
-            color: #3b82f6;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 12px;
-        }
-
-        .pricing-price {
-            font-size: 48px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 5px;
-        }
-
-        .pricing-period {
-            font-size: 16px;
-            color: #94a3b8;
-            margin-bottom: 20px;
-        }
-
-        .pricing-feature {
-            font-size: 14px;
-            color: #e0e0e0;
-            line-height: 2;
-            text-align: left;
-            padding-left: 20px;
-        }
-
+        .pricing-card:hover { transform: translateY(-8px); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2); }
+        .pricing-card.featured { border-color: #3b82f6; box-shadow: 0 0 30px rgba(59, 130, 246, 0.15); }
+        .pricing-tier { font-size: 14px; color: #3b82f6; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+        .pricing-price { font-size: 48px; font-weight: 700; color: #fff; margin-bottom: 5px; }
+        .pricing-period { font-size: 16px; color: #94a3b8; margin-bottom: 20px; }
+        .pricing-feature { font-size: 14px; color: #e0e0e0; line-height: 2; text-align: left; padding-left: 20px; }
         .pricing-badge {
-            display: inline-block;
-            background: #3b82f6;
-            color: #fff;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 15px;
+            display: inline-block; background: #3b82f6; color: #fff;
+            padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 15px;
         }
 
         /* Responsive */
@@ -547,9 +237,8 @@
             .kpi-grid { grid-template-columns: 1fr 1fr; }
         }
 
-        /* Print Styles */
         @media print {
-            .navigation, .slide-counter { display: none; }
+            .navigation, .slide-counter, .toolbar { display: none; }
             .slide { page-break-after: always; display: flex !important; position: relative; height: auto; min-height: 100vh; }
             body { overflow: visible; }
         }
@@ -558,46 +247,46 @@
 <body>
     <div class="presentation-container">
 
-        <!-- Slide 1: Cover -->
+        <!-- Slide 1: 표지 -->
         <div class="slide active cover-slide" data-slide="1">
             <div class="brand-logo">LegalAI</div>
             <div>
                 <div class="cover-title">LegalAI</div>
-                <div class="cover-subtitle">AI Marketing Automation for Law Firms</div>
+                <div class="cover-subtitle">미국 로펌 대상 AI 마케팅 자동화 플랫폼</div>
                 <div class="highlight-box" style="max-width: 800px; margin: 60px auto;">
                     <div class="highlight-text">
-                        6-Agent Pipeline &middot; $10B+ Market<br>
-                        Path to $1M ARR in 9 Months
+                        6-에이전트 파이프라인 &middot; $10B+ 시장 규모<br>
+                        9개월 내 $1M ARR 달성 경로
                     </div>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-width: 700px; margin: 40px auto 0;">
                     <div class="stats-box">
                         <div class="stats-number">$10B+</div>
-                        <div class="stats-label">Market Size</div>
+                        <div class="stats-label">시장 규모</div>
                     </div>
                     <div class="stats-box">
                         <div class="stats-number">85%+</div>
-                        <div class="stats-label">Gross Margin</div>
+                        <div class="stats-label">매출총이익률</div>
                     </div>
                     <div class="stats-box">
-                        <div class="stats-number">9 Mo</div>
-                        <div class="stats-label">To $1M ARR</div>
+                        <div class="stats-number">9개월</div>
+                        <div class="stats-label">$1M ARR 달성</div>
                     </div>
                 </div>
                 <div class="cover-info">
-                    AI Automation Strategy Report<br>
+                    AI 자동화 전략 보고서<br>
                     2025. 02
                 </div>
             </div>
         </div>
 
-        <!-- Slide 2: Problem -->
+        <!-- Slide 2: 문제 정의 -->
         <div class="slide" data-slide="2">
             <div class="brand-logo">LegalAI</div>
             <div class="slide-header">
                 <div class="slide-number">02</div>
-                <div class="slide-title">The Problem</div>
-                <div class="slide-subtitle">Law Firms Waste 70% of Ad Spend</div>
+                <div class="slide-title">문제 정의</div>
+                <div class="slide-subtitle">로펌 광고비의 70%가 낭비되고 있습니다</div>
             </div>
             <div class="slide-content">
                 <div class="grid-2">
@@ -605,118 +294,118 @@
                         <div class="kpi-grid" style="grid-template-columns: 1fr 1fr;">
                             <div class="kpi-box">
                                 <div class="kpi-value" style="color: #ef4444;">$87</div>
-                                <div class="kpi-label">Avg CPC for PI Keywords</div>
+                                <div class="kpi-label">PI 키워드 평균 CPC</div>
                             </div>
                             <div class="kpi-box">
                                 <div class="kpi-value" style="color: #ef4444;">3.1%</div>
-                                <div class="kpi-label">Conversion Rate</div>
+                                <div class="kpi-label">전환율</div>
                             </div>
                             <div class="kpi-box">
-                                <div class="kpi-value" style="color: #ef4444;">47hrs</div>
-                                <div class="kpi-label">Avg Response Time</div>
+                                <div class="kpi-value" style="color: #ef4444;">47시간</div>
+                                <div class="kpi-label">평균 응답 시간</div>
                             </div>
                             <div class="kpi-box">
                                 <div class="kpi-value" style="color: #ef4444;">70%</div>
-                                <div class="kpi-label">Wasted Ad Spend</div>
+                                <div class="kpi-label">낭비되는 광고비</div>
                             </div>
                         </div>
                     </div>
                     <div>
                         <div class="card" style="margin-bottom: 20px;">
-                            <div class="card-title">The Pain</div>
+                            <div class="card-title">핵심 문제</div>
                             <div class="card-content">
-                                For every <strong style="color: #ef4444;">$10,000</strong> spent on Google Ads, law firms lose ~$7,000 to slow response, poor follow-up, and generic landing pages.
+                                Google Ads에 <strong style="color: #ef4444;">$10,000</strong>을 지출할 때마다, 로펌은 느린 응답, 부실한 후속 관리, 범용 랜딩 페이지로 인해 약 $7,000을 손실합니다.
                             </div>
                         </div>
                         <div class="card" style="margin-bottom: 20px;">
-                            <div class="card-title">Root Causes</div>
+                            <div class="card-title">근본 원인</div>
                             <ul class="bullet-list" style="padding-left: 5px;">
-                                <li>Generic landing pages (no jurisdiction targeting)</li>
-                                <li>Manual lead response (hours, not minutes)</li>
-                                <li>No AI-driven follow-up sequences</li>
-                                <li>Zero conversion optimization</li>
+                                <li>범용 랜딩 페이지 (관할권 타겟팅 없음)</li>
+                                <li>수동 리드 응답 (분 단위가 아닌 시간 단위)</li>
+                                <li>AI 기반 후속 시퀀스 부재</li>
+                                <li>전환 최적화 전무</li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="highlight-box" style="margin-top: 30px;">
                     <div class="highlight-text">
-                        Opportunity: AI can automate the entire funnel from click to consultation
+                        기회: AI가 클릭에서 상담 예약까지 전체 퍼널을 자동화할 수 있습니다
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 3: Solution - 6-Agent Pipeline -->
+        <!-- Slide 3: 솔루션 - 6-에이전트 파이프라인 -->
         <div class="slide" data-slide="3">
             <div class="brand-logo">LegalAI</div>
             <div class="slide-header">
                 <div class="slide-number">03</div>
-                <div class="slide-title">The Solution</div>
-                <div class="slide-subtitle">6-Agent AI Pipeline</div>
+                <div class="slide-title">솔루션</div>
+                <div class="slide-subtitle">6-에이전트 AI 파이프라인</div>
             </div>
             <div class="slide-content">
                 <div class="pipeline-flow">
                     <div class="pipeline-node">
                         <div class="node-icon">&#x1F50D;</div>
-                        <div class="node-name">Intent Analyzer</div>
+                        <div class="node-name">의도 분석기</div>
                         <div class="node-model">Haiku</div>
                     </div>
                     <div class="pipeline-arrow">&#x2192;</div>
                     <div class="pipeline-node">
                         <div class="node-icon">&#x1F4C4;</div>
-                        <div class="node-name">Landing Optimizer</div>
+                        <div class="node-name">랜딩 최적화</div>
                         <div class="node-model">Sonnet</div>
                     </div>
                     <div class="pipeline-arrow">&#x2192;</div>
                     <div class="pipeline-node">
                         <div class="node-icon">&#x2705;</div>
-                        <div class="node-name">Lead Qualifier</div>
+                        <div class="node-name">리드 검증</div>
                         <div class="node-model">Haiku</div>
                     </div>
                     <div class="pipeline-arrow">&#x2192;</div>
                     <div class="pipeline-node">
                         <div class="node-icon">&#x1F4AC;</div>
-                        <div class="node-name">Conversion Script</div>
+                        <div class="node-name">전환 스크립트</div>
                         <div class="node-model">Sonnet</div>
                     </div>
                     <div class="pipeline-arrow">&#x2192;</div>
                     <div class="pipeline-node">
                         <div class="node-icon">&#x1F4E7;</div>
-                        <div class="node-name">Follow-up Auto</div>
+                        <div class="node-name">후속 자동화</div>
                         <div class="node-model">Haiku</div>
                     </div>
                     <div class="pipeline-arrow">&#x2192;</div>
                     <div class="pipeline-node">
                         <div class="node-icon">&#x1F4CA;</div>
-                        <div class="node-name">Revenue Report</div>
-                        <div class="node-model">Opus (monthly)</div>
+                        <div class="node-name">매출 리포트</div>
+                        <div class="node-model">Opus (월간)</div>
                     </div>
                 </div>
 
                 <div class="grid-2" style="margin-top: 30px;">
                     <div class="card">
-                        <div class="card-title">Quality Gates</div>
+                        <div class="card-title">품질 게이트</div>
                         <div class="card-content">
-                            Compliance check between every stage<br>
-                            &bull; State Bar Rule verification (Rule 7.01+)<br>
-                            &bull; TCPA / CAN-SPAM validation<br>
-                            &bull; Mandatory attorney review gate
+                            모든 단계 간 컴플라이언스 검사<br>
+                            &bull; 주 변호사 협회 규칙 검증 (Rule 7.01+)<br>
+                            &bull; TCPA / CAN-SPAM 유효성 검사<br>
+                            &bull; 필수 변호사 검토 게이트
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-title">JSON Pipeline</div>
+                        <div class="card-title">JSON 파이프라인</div>
                         <div class="card-content">
-                            Structured output: Agent N feeds directly into Agent N+1<br>
-                            &bull; Fully typed interfaces (TypeScript)<br>
-                            &bull; Compliance status at every stage<br>
-                            &bull; Audit trail for regulatory compliance
+                            구조화된 출력: Agent N &rarr; Agent N+1 직접 전달<br>
+                            &bull; 완전 타입 인터페이스 (TypeScript)<br>
+                            &bull; 모든 단계에서 컴플라이언스 상태 추적<br>
+                            &bull; 규제 준수를 위한 감사 추적
                         </div>
                     </div>
                 </div>
 
                 <div class="code-block" style="margin-top: 20px;">
-<span class="code-comment">// Agent 1 Output &rarr; Agent 2 Input</span>
+<span class="code-comment">// Agent 1 출력 &rarr; Agent 2 입력</span>
 {
   <span class="code-key">"keyword"</span>: <span class="code-str">"car accident lawyer houston"</span>,
   <span class="code-key">"urgency_score"</span>: <span class="code-num">8</span>,
@@ -728,235 +417,235 @@
             </div>
         </div>
 
-        <!-- Slide 4: Tech Stack & Architecture -->
+        <!-- Slide 4: 아키텍처 -->
         <div class="slide" data-slide="4">
             <div class="brand-logo">LegalAI</div>
             <div class="slide-header">
                 <div class="slide-number">04</div>
-                <div class="slide-title">Architecture</div>
-                <div class="slide-subtitle">Tech Stack & API Map</div>
+                <div class="slide-title">아키텍처</div>
+                <div class="slide-subtitle">기술 스택 & API 구조</div>
             </div>
             <div class="slide-content">
                 <div class="arch-layer">
-                    <div class="arch-layer-title">Frontend & Infrastructure</div>
+                    <div class="arch-layer-title">프론트엔드 & 인프라</div>
                     <div class="arch-layer-content">
-                        Next.js 16 + TypeScript + Tailwind CSS &nbsp;&bull;&nbsp; Vercel deployment &nbsp;&bull;&nbsp; Clerk Auth &nbsp;&bull;&nbsp; PostHog + Sentry monitoring
+                        Next.js 16 + TypeScript + Tailwind CSS &nbsp;&bull;&nbsp; Vercel 배포 &nbsp;&bull;&nbsp; Clerk 인증 &nbsp;&bull;&nbsp; PostHog + Sentry 모니터링
                     </div>
                 </div>
                 <div class="arch-layer">
-                    <div class="arch-layer-title">AI Layer - Claude API (Multi-Model)</div>
+                    <div class="arch-layer-title">AI 레이어 - Claude API (멀티 모델)</div>
                     <div class="arch-layer-content">
-                        <strong>Haiku:</strong> Intent Scoring, Lead Qualification, Follow-up (high volume, low cost) &nbsp;&bull;&nbsp;
-                        <strong>Sonnet:</strong> Landing Pages, Conversion Scripts (content quality) &nbsp;&bull;&nbsp;
-                        <strong>Opus:</strong> Monthly Revenue Analysis (deep reasoning)
+                        <strong>Haiku:</strong> 의도 스코어링, 리드 검증, 후속 관리 (고볼륨, 저비용) &nbsp;&bull;&nbsp;
+                        <strong>Sonnet:</strong> 랜딩 페이지, 전환 스크립트 (콘텐츠 품질) &nbsp;&bull;&nbsp;
+                        <strong>Opus:</strong> 월간 매출 분석 (심층 추론)
                     </div>
                 </div>
                 <div class="grid-2" style="gap: 20px;">
                     <div class="arch-layer">
-                        <div class="arch-layer-title">Backend Services</div>
+                        <div class="arch-layer-title">백엔드 서비스</div>
                         <div class="arch-layer-content">
                             &bull; Next.js API Routes + BullMQ<br>
                             &bull; PostgreSQL + Prisma ORM<br>
-                            &bull; Stripe (subscription + usage billing)<br>
-                            &bull; Row-level security (multi-tenant)
+                            &bull; Stripe (구독 + 사용량 과금)<br>
+                            &bull; 행 수준 보안 (멀티 테넌트)
                         </div>
                     </div>
                     <div class="arch-layer">
-                        <div class="arch-layer-title">Integrations</div>
+                        <div class="arch-layer-title">외부 연동</div>
                         <div class="arch-layer-content">
-                            &bull; Google Ads API (ads data)<br>
-                            &bull; Twilio ($0.0079/msg) + SendGrid<br>
+                            &bull; Google Ads API (광고 데이터)<br>
+                            &bull; Twilio ($0.0079/건) + SendGrid<br>
                             &bull; HubSpot CRM + Calendly<br>
-                            &bull; Compliance Engine (per-state rules)
+                            &bull; 컴플라이언스 엔진 (주별 규칙)
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 5: Pricing Tiers -->
+        <!-- Slide 5: 수익 모델 -->
         <div class="slide" data-slide="5">
             <div class="brand-logo">LegalAI</div>
             <div class="slide-header">
                 <div class="slide-number">05</div>
-                <div class="slide-title">Revenue Model</div>
-                <div class="slide-subtitle">Three-Tier Pricing</div>
+                <div class="slide-title">수익 모델</div>
+                <div class="slide-subtitle">3단계 요금제</div>
             </div>
             <div class="slide-content">
                 <div class="grid-3">
                     <div class="pricing-card">
                         <div class="pricing-tier">Starter</div>
                         <div class="pricing-price">$497</div>
-                        <div class="pricing-period">per month</div>
-                        <div style="font-size: 15px; color: #94a3b8; margin-bottom: 20px;">Solo Practitioners</div>
+                        <div class="pricing-period">월</div>
+                        <div style="font-size: 15px; color: #94a3b8; margin-bottom: 20px;">개인 변호사</div>
                         <div class="pricing-feature">
-                            &#x2713; 1,000 AI operations/mo<br>
-                            &#x2713; 3 landing pages<br>
-                            &#x2713; 500 SMS/email sends<br>
-                            &#x2713; Basic monthly report<br>
-                            &#x2713; Email support
+                            &#x2713; 1,000 AI 작업/월<br>
+                            &#x2713; 3개 랜딩 페이지<br>
+                            &#x2713; 500건 SMS/이메일<br>
+                            &#x2713; 기본 월간 리포트<br>
+                            &#x2713; 이메일 지원
                         </div>
                         <div class="stats-box" style="margin-top: 20px; padding: 12px;">
                             <div class="stats-number" style="font-size: 28px;">78%</div>
-                            <div class="stats-label" style="font-size: 12px;">Gross Margin</div>
+                            <div class="stats-label" style="font-size: 12px;">매출총이익률</div>
                         </div>
                     </div>
                     <div class="pricing-card featured">
-                        <div class="pricing-badge">BEST VALUE</div>
+                        <div class="pricing-badge">최고 가성비</div>
                         <div class="pricing-tier">Growth</div>
                         <div class="pricing-price">$1,497</div>
-                        <div class="pricing-period">per month</div>
-                        <div style="font-size: 15px; color: #94a3b8; margin-bottom: 20px;">2-10 Attorney Firms</div>
+                        <div class="pricing-period">월</div>
+                        <div style="font-size: 15px; color: #94a3b8; margin-bottom: 20px;">2-10인 로펌</div>
                         <div class="pricing-feature">
-                            &#x2713; 5,000 AI operations/mo<br>
-                            &#x2713; 10 landing pages<br>
-                            &#x2713; 2,000 SMS/email sends<br>
-                            &#x2713; Auto A/B testing<br>
-                            &#x2713; Weekly reports<br>
-                            &#x2713; Priority support
+                            &#x2713; 5,000 AI 작업/월<br>
+                            &#x2713; 10개 랜딩 페이지<br>
+                            &#x2713; 2,000건 SMS/이메일<br>
+                            &#x2713; 자동 A/B 테스트<br>
+                            &#x2713; 주간 리포트<br>
+                            &#x2713; 우선 지원
                         </div>
                         <div class="stats-box" style="margin-top: 20px; padding: 12px;">
                             <div class="stats-number" style="font-size: 28px;">11.3x</div>
-                            <div class="stats-label" style="font-size: 12px;">LTV:CAC Ratio</div>
+                            <div class="stats-label" style="font-size: 12px;">LTV:CAC 비율</div>
                         </div>
                     </div>
                     <div class="pricing-card">
                         <div class="pricing-tier">Enterprise</div>
                         <div class="pricing-price">$4,497</div>
-                        <div class="pricing-period">per month</div>
-                        <div style="font-size: 15px; color: #94a3b8; margin-bottom: 20px;">10+ Attorney Firms</div>
+                        <div class="pricing-period">월</div>
+                        <div style="font-size: 15px; color: #94a3b8; margin-bottom: 20px;">10인 이상 로펌</div>
                         <div class="pricing-feature">
-                            &#x2713; Unlimited AI operations<br>
-                            &#x2713; Unlimited landing pages<br>
-                            &#x2713; 10,000 SMS/email sends<br>
-                            &#x2713; Dedicated account manager<br>
-                            &#x2713; Real-time dashboard<br>
-                            &#x2713; Custom API access
+                            &#x2713; 무제한 AI 작업<br>
+                            &#x2713; 무제한 랜딩 페이지<br>
+                            &#x2713; 10,000건 SMS/이메일<br>
+                            &#x2713; 전담 어카운트 매니저<br>
+                            &#x2713; 실시간 대시보드<br>
+                            &#x2713; 커스텀 API 접근
                         </div>
                         <div class="stats-box" style="margin-top: 20px; padding: 12px;">
                             <div class="stats-number" style="font-size: 28px;">$101K</div>
-                            <div class="stats-label" style="font-size: 12px;">Lifetime Value</div>
+                            <div class="stats-label" style="font-size: 12px;">고객 생애 가치</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 6: Unit Economics -->
+        <!-- Slide 6: 단위 경제학 -->
         <div class="slide" data-slide="6">
             <div class="brand-logo">LegalAI</div>
             <div class="slide-header">
                 <div class="slide-number">06</div>
-                <div class="slide-title">Unit Economics</div>
-                <div class="slide-subtitle">Path to $1M ARR</div>
+                <div class="slide-title">단위 경제학</div>
+                <div class="slide-subtitle">$1M ARR 달성 경로</div>
             </div>
             <div class="slide-content">
                 <div class="grid-2">
                     <div>
-                        <h3 style="color: #3b82f6; font-size: 22px; margin-bottom: 20px;">MRR Growth Projection</h3>
+                        <h3 style="color: #3b82f6; font-size: 22px; margin-bottom: 20px;">MRR 성장 전망</h3>
                         <div class="roi-chart" style="height: 220px;">
                             <div class="roi-bar" style="height: 15px; min-height: 30px;">
                                 <div style="font-size: 12px;">$2K</div>
-                                <div class="roi-bar-label">Mo 1</div>
+                                <div class="roi-bar-label">1개월</div>
                             </div>
                             <div class="roi-bar" style="height: 40px;">
                                 <div style="font-size: 12px;">$13K</div>
-                                <div class="roi-bar-label">Mo 3</div>
+                                <div class="roi-bar-label">3개월</div>
                             </div>
                             <div class="roi-bar" style="height: 90px;">
                                 <div style="font-size: 12px;">$56K</div>
-                                <div class="roi-bar-label">Mo 6</div>
+                                <div class="roi-bar-label">6개월</div>
                             </div>
                             <div class="roi-bar" style="height: 140px; background: linear-gradient(180deg, #8b5cf6 0%, #0f1b2d 100%);">
                                 <div style="font-size: 12px;">$89K</div>
-                                <div class="roi-bar-label">Mo 9</div>
+                                <div class="roi-bar-label">9개월</div>
                             </div>
                             <div class="roi-bar" style="height: 200px; background: linear-gradient(180deg, #10b981 0%, #0f1b2d 100%);">
                                 <div style="font-size: 12px;">$128K</div>
-                                <div class="roi-bar-label">Mo 12</div>
+                                <div class="roi-bar-label">12개월</div>
                             </div>
                         </div>
                         <div class="highlight-box" style="margin-top: 45px; padding: 15px;">
                             <div class="highlight-text" style="font-size: 22px;">
-                                Year 1 ARR: <span style="color: #10b981;">$1,534,068</span>
+                                1년차 ARR: <span style="color: #10b981;">$1,534,068</span>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <h3 style="color: #3b82f6; font-size: 22px; margin-bottom: 20px;">Key Metrics (Month 12)</h3>
+                        <h3 style="color: #3b82f6; font-size: 22px; margin-bottom: 20px;">핵심 지표 (12개월 시점)</h3>
                         <div class="kpi-grid" style="grid-template-columns: 1fr 1fr;">
                             <div class="kpi-box">
                                 <div class="kpi-value" style="font-size: 32px;">53</div>
-                                <div class="kpi-label">Total Customers</div>
+                                <div class="kpi-label">총 고객 수</div>
                             </div>
                             <div class="kpi-box">
                                 <div class="kpi-value" style="font-size: 32px; color: #10b981;">46%</div>
-                                <div class="kpi-label">Net Margin</div>
+                                <div class="kpi-label">순이익률</div>
                             </div>
                         </div>
                         <table class="data-table" style="margin-top: 25px;">
-                            <tr><th>Metric</th><th>Value</th></tr>
-                            <tr><td>Blended CAC</td><td>$1,980</td></tr>
-                            <tr><td>Blended LTV</td><td>$19,437</td></tr>
+                            <tr><th>지표</th><th>값</th></tr>
+                            <tr><td>혼합 CAC</td><td>$1,980</td></tr>
+                            <tr><td>혼합 LTV</td><td>$19,437</td></tr>
                             <tr><td>LTV:CAC</td><td style="color: #10b981; font-weight: 700;">9.8x</td></tr>
-                            <tr><td>Payback Period</td><td>2.0 months</td></tr>
-                            <tr><td>Gross Margin</td><td>85-90%</td></tr>
-                            <tr><td>Year 1 Net Profit</td><td style="color: #10b981; font-weight: 700;">$918K</td></tr>
+                            <tr><td>투자 회수 기간</td><td>2.0개월</td></tr>
+                            <tr><td>매출총이익률</td><td>85-90%</td></tr>
+                            <tr><td>1년차 순이익</td><td style="color: #10b981; font-weight: 700;">$918K</td></tr>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 7: Cost Structure -->
+        <!-- Slide 7: 비용 구조 -->
         <div class="slide" data-slide="7">
             <div class="brand-logo">LegalAI</div>
             <div class="slide-header">
                 <div class="slide-number">07</div>
-                <div class="slide-title">Cost Structure</div>
-                <div class="slide-subtitle">Margins & AI Cost Efficiency</div>
+                <div class="slide-title">비용 구조</div>
+                <div class="slide-subtitle">마진 & AI 비용 효율성</div>
             </div>
             <div class="slide-content">
                 <div class="grid-2">
                     <div>
-                        <h3 style="color: #3b82f6; font-size: 22px; margin-bottom: 15px;">Monthly Costs (Month 12)</h3>
+                        <h3 style="color: #3b82f6; font-size: 22px; margin-bottom: 15px;">월간 비용 (12개월 시점)</h3>
                         <table class="data-table">
-                            <tr><th>Item</th><th>Cost</th><th>% Rev</th></tr>
+                            <tr><th>항목</th><th>비용</th><th>매출 대비</th></tr>
                             <tr><td>AI API (Claude)</td><td>$8,500</td><td>6.6%</td></tr>
-                            <tr><td>Infrastructure</td><td>$2,000</td><td>1.6%</td></tr>
-                            <tr><td>SaaS Tools</td><td>$3,000</td><td>2.3%</td></tr>
-                            <tr><td>Team (3 people)</td><td>$35,000</td><td>27.4%</td></tr>
-                            <tr><td>Marketing/Sales</td><td>$15,000</td><td>11.7%</td></tr>
-                            <tr><td>Legal Counsel</td><td>$5,000</td><td>3.9%</td></tr>
+                            <tr><td>인프라</td><td>$2,000</td><td>1.6%</td></tr>
+                            <tr><td>SaaS 도구</td><td>$3,000</td><td>2.3%</td></tr>
+                            <tr><td>팀 (3명)</td><td>$35,000</td><td>27.4%</td></tr>
+                            <tr><td>마케팅/영업</td><td>$15,000</td><td>11.7%</td></tr>
+                            <tr><td>법률 자문</td><td>$5,000</td><td>3.9%</td></tr>
                             <tr style="background: rgba(59, 130, 246, 0.1);">
-                                <td><strong>Total</strong></td>
+                                <td><strong>합계</strong></td>
                                 <td><strong>$68,500</strong></td>
                                 <td><strong>53.6%</strong></td>
                             </tr>
                             <tr style="background: rgba(16, 185, 129, 0.1);">
-                                <td><strong style="color: #10b981;">Net Profit</strong></td>
+                                <td><strong style="color: #10b981;">순이익</strong></td>
                                 <td><strong style="color: #10b981;">$59,339</strong></td>
                                 <td><strong style="color: #10b981;">46.4%</strong></td>
                             </tr>
                         </table>
                     </div>
                     <div>
-                        <h3 style="color: #3b82f6; font-size: 22px; margin-bottom: 15px;">AI Cost per 1K Runs</h3>
+                        <h3 style="color: #3b82f6; font-size: 22px; margin-bottom: 15px;">AI 비용 (1K회 실행 기준)</h3>
                         <table class="data-table">
-                            <tr><th>Agent</th><th>Model</th><th>Cost</th></tr>
-                            <tr><td>Intent Analyzer</td><td>Haiku</td><td style="color: #10b981;">$0.50</td></tr>
-                            <tr><td>Landing Optimizer</td><td>Sonnet</td><td>$4.50</td></tr>
-                            <tr><td>Lead Qualifier</td><td>Haiku</td><td style="color: #10b981;">$0.50</td></tr>
-                            <tr><td>Conversion Script</td><td>Sonnet</td><td>$4.50</td></tr>
-                            <tr><td>Follow-up Auto</td><td>Haiku</td><td style="color: #10b981;">$0.50</td></tr>
-                            <tr><td>Revenue Report</td><td>Opus</td><td>$45.00</td></tr>
+                            <tr><th>에이전트</th><th>모델</th><th>비용</th></tr>
+                            <tr><td>의도 분석기</td><td>Haiku</td><td style="color: #10b981;">$0.50</td></tr>
+                            <tr><td>랜딩 최적화</td><td>Sonnet</td><td>$4.50</td></tr>
+                            <tr><td>리드 검증</td><td>Haiku</td><td style="color: #10b981;">$0.50</td></tr>
+                            <tr><td>전환 스크립트</td><td>Sonnet</td><td>$4.50</td></tr>
+                            <tr><td>후속 자동화</td><td>Haiku</td><td style="color: #10b981;">$0.50</td></tr>
+                            <tr><td>매출 리포트</td><td>Opus</td><td>$45.00</td></tr>
                         </table>
                         <div class="card" style="margin-top: 20px;">
-                            <div class="card-title" style="font-size: 18px;">Strategy</div>
+                            <div class="card-title" style="font-size: 18px;">전략</div>
                             <div class="card-content" style="font-size: 14px;">
-                                Haiku for high-volume scoring (cheap + fast).<br>
-                                Sonnet for quality content generation.<br>
-                                Opus reserved for monthly deep analysis only.
+                                Haiku: 고볼륨 스코어링 (저렴 + 빠름)<br>
+                                Sonnet: 품질 높은 콘텐츠 생성<br>
+                                Opus: 월간 심층 분석에만 한정 사용
                             </div>
                         </div>
                     </div>
@@ -964,58 +653,58 @@
             </div>
         </div>
 
-        <!-- Slide 8: Global Expansion -->
+        <!-- Slide 8: 글로벌 확장 -->
         <div class="slide" data-slide="8">
             <div class="brand-logo">LegalAI</div>
             <div class="slide-header">
                 <div class="slide-number">08</div>
-                <div class="slide-title">Global Expansion</div>
-                <div class="slide-subtitle">4-Phase Strategy</div>
+                <div class="slide-title">글로벌 확장</div>
+                <div class="slide-subtitle">4단계 전략</div>
             </div>
             <div class="slide-content">
                 <div class="grid-4">
                     <div class="pillar-card">
                         <div class="pillar-number">01</div>
-                        <div class="pillar-title">US Market</div>
+                        <div class="pillar-title">미국 시장</div>
                         <div class="pillar-desc">
-                            <small style="color: #3b82f6;">Month 1-12</small><br>
-                            Texas, Florida, California<br>
-                            PI, Immigration, DUI<br>
-                            Target: $1.5M ARR<br>
-                            Team: 5 people
+                            <small style="color: #3b82f6;">1-12개월</small><br>
+                            텍사스, 플로리다, 캘리포니아<br>
+                            PI, 이민, DUI<br>
+                            목표: $1.5M ARR<br>
+                            팀: 5명
                         </div>
                     </div>
                     <div class="pillar-card">
                         <div class="pillar-number">02</div>
-                        <div class="pillar-title">English Markets</div>
+                        <div class="pillar-title">영어권 시장</div>
                         <div class="pillar-desc">
-                            <small style="color: #3b82f6;">Month 12-24</small><br>
-                            UK, Canada, Australia<br>
-                            Local compliance engines<br>
-                            Target: $5M ARR<br>
-                            Team: 15 people
+                            <small style="color: #3b82f6;">12-24개월</small><br>
+                            영국, 캐나다, 호주<br>
+                            현지 컴플라이언스 엔진<br>
+                            목표: $5M ARR<br>
+                            팀: 15명
                         </div>
                     </div>
                     <div class="pillar-card">
                         <div class="pillar-number">03</div>
-                        <div class="pillar-title">Multi-Language</div>
+                        <div class="pillar-title">다국어 확장</div>
                         <div class="pillar-desc">
-                            <small style="color: #3b82f6;">Month 24-36</small><br>
-                            Germany, Japan, Korea<br>
-                            Prompt chain rebuild<br>
-                            Target: $15M ARR<br>
-                            Team: 35 people
+                            <small style="color: #3b82f6;">24-36개월</small><br>
+                            독일, 일본, 한국<br>
+                            프롬프트 체인 재구축<br>
+                            목표: $15M ARR<br>
+                            팀: 35명
                         </div>
                     </div>
                     <div class="pillar-card">
                         <div class="pillar-number">04</div>
-                        <div class="pillar-title">SaaS Platform</div>
+                        <div class="pillar-title">SaaS 플랫폼</div>
                         <div class="pillar-desc">
-                            <small style="color: #3b82f6;">Month 24+</small><br>
-                            Self-service onboarding<br>
-                            Template marketplace<br>
-                            Target: $30M+ ARR<br>
-                            Team: 60+ people
+                            <small style="color: #3b82f6;">24개월+</small><br>
+                            셀프 서비스 온보딩<br>
+                            템플릿 마켓플레이스<br>
+                            목표: $30M+ ARR<br>
+                            팀: 60명 이상
                         </div>
                     </div>
                 </div>
@@ -1023,104 +712,104 @@
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
                         <div>
                             <div style="font-size: 36px; font-weight: 700; color: #3b82f6;">$1.5M</div>
-                            <div style="font-size: 14px; color: #e0e0e0;">Year 1</div>
+                            <div style="font-size: 14px; color: #e0e0e0;">1년차</div>
                         </div>
                         <div>
                             <div style="font-size: 36px; font-weight: 700; color: #3b82f6;">$5M</div>
-                            <div style="font-size: 14px; color: #e0e0e0;">Year 2</div>
+                            <div style="font-size: 14px; color: #e0e0e0;">2년차</div>
                         </div>
                         <div>
                             <div style="font-size: 36px; font-weight: 700; color: #3b82f6;">$15M</div>
-                            <div style="font-size: 14px; color: #e0e0e0;">Year 3</div>
+                            <div style="font-size: 14px; color: #e0e0e0;">3년차</div>
                         </div>
                         <div>
                             <div style="font-size: 36px; font-weight: 700; color: #10b981;">$30M+</div>
-                            <div style="font-size: 14px; color: #e0e0e0;">Year 4</div>
+                            <div style="font-size: 14px; color: #e0e0e0;">4년차</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 9: Risk Matrix -->
+        <!-- Slide 9: 리스크 관리 -->
         <div class="slide" data-slide="9">
             <div class="brand-logo">LegalAI</div>
             <div class="slide-header">
                 <div class="slide-number">09</div>
-                <div class="slide-title">Risk Management</div>
-                <div class="slide-subtitle">Risk Matrix & Mitigation</div>
+                <div class="slide-title">리스크 관리</div>
+                <div class="slide-subtitle">리스크 매트릭스 & 완화 전략</div>
             </div>
             <div class="slide-content">
                 <div class="grid-2">
                     <div>
-                        <h3 style="color: #3b82f6; font-size: 22px; margin-bottom: 15px;">Top Risks</h3>
+                        <h3 style="color: #3b82f6; font-size: 22px; margin-bottom: 15px;">주요 리스크</h3>
                         <table class="data-table" style="font-size: 13px;">
-                            <tr><th>Risk</th><th>P</th><th>I</th><th>Mitigation</th></tr>
+                            <tr><th>리스크</th><th>확률</th><th>영향</th><th>완화 전략</th></tr>
                             <tr>
-                                <td>Bar rule violation</td>
-                                <td style="color: #ef4444; font-weight: 700;">H</td>
-                                <td style="color: #ef4444; font-weight: 700;">H</td>
-                                <td>Compliance engine + attorney review gate</td>
+                                <td>협회 규칙 위반</td>
+                                <td style="color: #ef4444; font-weight: 700;">높음</td>
+                                <td style="color: #ef4444; font-weight: 700;">높음</td>
+                                <td>컴플라이언스 엔진 + 변호사 검토 게이트</td>
                             </tr>
                             <tr>
-                                <td>Token cost explosion</td>
-                                <td style="color: #f59e0b; font-weight: 700;">M</td>
-                                <td style="color: #ef4444; font-weight: 700;">H</td>
-                                <td>Per-customer cap 25% COGS, Haiku-first</td>
+                                <td>토큰 비용 폭증</td>
+                                <td style="color: #f59e0b; font-weight: 700;">중간</td>
+                                <td style="color: #ef4444; font-weight: 700;">높음</td>
+                                <td>고객당 COGS 25% 상한, Haiku 우선</td>
                             </tr>
                             <tr>
-                                <td>Data breach</td>
-                                <td style="color: #10b981; font-weight: 700;">L</td>
-                                <td style="color: #ef4444; font-weight: 700;">H</td>
-                                <td>Row-level security, SOC2, $1M cyber ins.</td>
+                                <td>데이터 유출</td>
+                                <td style="color: #10b981; font-weight: 700;">낮음</td>
+                                <td style="color: #ef4444; font-weight: 700;">높음</td>
+                                <td>행 수준 보안, SOC2, $1M 사이버 보험</td>
                             </tr>
                             <tr>
-                                <td>TCPA violation</td>
-                                <td style="color: #f59e0b; font-weight: 700;">M</td>
-                                <td style="color: #ef4444; font-weight: 700;">H</td>
-                                <td>Explicit opt-in, Twilio compliance bundle</td>
+                                <td>TCPA 위반</td>
+                                <td style="color: #f59e0b; font-weight: 700;">중간</td>
+                                <td style="color: #ef4444; font-weight: 700;">높음</td>
+                                <td>명시적 수신 동의, Twilio 번들</td>
                             </tr>
                             <tr>
-                                <td>Founder dependency</td>
-                                <td style="color: #ef4444; font-weight: 700;">H</td>
-                                <td style="color: #f59e0b; font-weight: 700;">M</td>
-                                <td>2nd hire at month 6, full documentation</td>
+                                <td>창업자 의존</td>
+                                <td style="color: #ef4444; font-weight: 700;">높음</td>
+                                <td style="color: #f59e0b; font-weight: 700;">중간</td>
+                                <td>6개월 차 2번째 채용, 문서화</td>
                             </tr>
                             <tr>
-                                <td>Competitor entry</td>
-                                <td style="color: #f59e0b; font-weight: 700;">M</td>
-                                <td style="color: #f59e0b; font-weight: 700;">M</td>
-                                <td>Niche specialization + territory exclusivity</td>
+                                <td>경쟁사 진입</td>
+                                <td style="color: #f59e0b; font-weight: 700;">중간</td>
+                                <td style="color: #f59e0b; font-weight: 700;">중간</td>
+                                <td>니치 전문화 + 지역 독점권</td>
                             </tr>
                         </table>
                     </div>
                     <div>
-                        <h3 style="color: #3b82f6; font-size: 22px; margin-bottom: 15px;">Critical Guardrails</h3>
+                        <h3 style="color: #3b82f6; font-size: 22px; margin-bottom: 15px;">핵심 가드레일</h3>
                         <div class="card" style="margin-bottom: 15px;">
-                            <div class="card-title" style="color: #ef4444; font-size: 18px;">NEVER</div>
+                            <div class="card-title" style="color: #ef4444; font-size: 18px;">절대 금지</div>
                             <div class="card-content" style="font-size: 14px;">
-                                Legal advice, document drafting, case analysis, practice of law in any form
+                                법률 자문, 문서 작성, 사건 분석, 어떤 형태로든 법률 업무 수행
                             </div>
                         </div>
                         <div class="card" style="margin-bottom: 15px;">
-                            <div class="card-title" style="color: #10b981; font-size: 18px;">ALWAYS</div>
+                            <div class="card-title" style="color: #10b981; font-size: 18px;">항상 실행</div>
                             <div class="card-content" style="font-size: 14px;">
-                                Attorney review gate, compliance check, opt-in verification, jurisdiction validation
+                                변호사 검토 게이트, 컴플라이언스 검사, 수신 동의 확인, 관할권 검증
                             </div>
                         </div>
                         <div class="card" style="margin-bottom: 15px;">
-                            <div class="card-title" style="color: #f59e0b; font-size: 18px;">MONITOR</div>
+                            <div class="card-title" style="color: #f59e0b; font-size: 18px;">모니터링</div>
                             <div class="card-content" style="font-size: 14px;">
-                                AI cost/revenue &lt;25%, compliance pass &gt;95%, churn &lt;5%
+                                AI 비용/매출 &lt;25%, 컴플라이언스 통과율 &gt;95%, 이탈률 &lt;5%
                             </div>
                         </div>
                         <div class="card">
-                            <div class="card-title" style="font-size: 18px;">Before Writing Code</div>
+                            <div class="card-title" style="font-size: 18px;">코드 작성 전 필수</div>
                             <div class="card-content" style="font-size: 14px;">
-                                1. Legal ethics counsel review<br>
-                                2. 100 law firm demand survey<br>
-                                3. Compliance engine first<br>
-                                4. 3 free pilot customers
+                                1. 법률 윤리 자문 검토<br>
+                                2. 100개 로펌 수요 조사<br>
+                                3. 컴플라이언스 엔진 우선 구축<br>
+                                4. 3개 무료 파일럿 고객 확보
                             </div>
                         </div>
                     </div>
@@ -1128,116 +817,116 @@
             </div>
         </div>
 
-        <!-- Slide 10: 90-Day Roadmap -->
+        <!-- Slide 10: 90일 로드맵 -->
         <div class="slide" data-slide="10">
             <div class="brand-logo">LegalAI</div>
             <div class="slide-header">
                 <div class="slide-number">10</div>
-                <div class="slide-title">90-Day Roadmap</div>
-                <div class="slide-subtitle">Execution Plan</div>
+                <div class="slide-title">90일 로드맵</div>
+                <div class="slide-subtitle">실행 계획</div>
             </div>
             <div class="slide-content">
                 <table class="data-table">
                     <tr>
-                        <th>Week</th>
-                        <th>Objective</th>
-                        <th>Deliverables</th>
-                        <th>Go/No-Go</th>
+                        <th>주차</th>
+                        <th>목표</th>
+                        <th>산출물</th>
+                        <th>진행/중단 기준</th>
                     </tr>
                     <tr>
                         <td><strong style="color: #3b82f6;">1-2</strong></td>
-                        <td>MVP Design + Demand Validation</td>
-                        <td>Landing page, 100-firm email list, price A/B test</td>
-                        <td>Email response &gt;3%</td>
+                        <td>MVP 설계 + 수요 검증</td>
+                        <td>랜딩 페이지, 100개 로펌 이메일 리스트, 가격 A/B 테스트</td>
+                        <td>이메일 응답률 &gt;3%</td>
                     </tr>
                     <tr>
                         <td><strong style="color: #3b82f6;">3-4</strong></td>
-                        <td>AI Pipeline v0.1</td>
-                        <td>Agents 1-3 working, compliance gate, prompt chains</td>
-                        <td>Compliance pass &gt;95%</td>
+                        <td>AI 파이프라인 v0.1</td>
+                        <td>에이전트 1-3 작동, 컴플라이언스 게이트, 프롬프트 체인</td>
+                        <td>컴플라이언스 통과율 &gt;95%</td>
                     </tr>
                     <tr>
                         <td><strong style="color: #3b82f6;">5-6</strong></td>
-                        <td>Pilot Customers</td>
-                        <td>3 free/discounted pilot contracts signed</td>
-                        <td>3 firms signed</td>
+                        <td>파일럿 고객 확보</td>
+                        <td>무료/할인 파일럿 계약 3건 체결</td>
+                        <td>3개 로펌 계약</td>
                     </tr>
                     <tr>
                         <td><strong style="color: #3b82f6;">7-8</strong></td>
-                        <td>Pilot Execution</td>
-                        <td>Conversion rate data, AI quality monitoring</td>
-                        <td>Conversion +30%</td>
+                        <td>파일럿 실행</td>
+                        <td>전환율 데이터, AI 품질 모니터링</td>
+                        <td>전환율 +30%</td>
                     </tr>
                     <tr>
                         <td><strong style="color: #3b82f6;">9-10</strong></td>
-                        <td>Paid Launch</td>
-                        <td>2+ paid conversions, case study, sales process</td>
+                        <td>유료 출시</td>
+                        <td>2건 이상 유료 전환, 사례 연구, 영업 프로세스</td>
                         <td>MRR &gt;$5,000</td>
                     </tr>
                     <tr>
                         <td><strong style="color: #3b82f6;">11-12</strong></td>
-                        <td>Scale Start</td>
-                        <td>5+ paid customers, outbound system, 2nd practice area</td>
+                        <td>확장 시작</td>
+                        <td>5건 이상 유료 고객, 아웃바운드 시스템, 2번째 업무 분야</td>
                         <td>MRR &gt;$15,000</td>
                     </tr>
                 </table>
 
                 <div class="grid-3" style="margin-top: 35px;">
                     <div class="stats-box" style="border-color: #10b981;">
-                        <div class="stats-number" style="color: #10b981; font-size: 28px;">Continue</div>
-                        <div class="stats-label" style="font-size: 13px;">5+ customers, MRR&gt;$15K, NPS&gt;40</div>
+                        <div class="stats-number" style="color: #10b981; font-size: 28px;">계속 진행</div>
+                        <div class="stats-label" style="font-size: 13px;">5건+ 고객, MRR&gt;$15K, NPS&gt;40</div>
                     </div>
                     <div class="stats-box" style="border-color: #f59e0b;">
-                        <div class="stats-number" style="color: #f59e0b; font-size: 28px;">Pivot</div>
-                        <div class="stats-label" style="font-size: 13px;">2-4 customers, MRR $5-15K</div>
+                        <div class="stats-number" style="color: #f59e0b; font-size: 28px;">피봇</div>
+                        <div class="stats-label" style="font-size: 13px;">2-4건 고객, MRR $5-15K</div>
                     </div>
                     <div class="stats-box" style="border-color: #ef4444;">
-                        <div class="stats-number" style="color: #ef4444; font-size: 28px;">Stop</div>
-                        <div class="stats-label" style="font-size: 13px;">0-1 customers, MRR&lt;$5K</div>
+                        <div class="stats-number" style="color: #ef4444; font-size: 28px;">중단</div>
+                        <div class="stats-label" style="font-size: 13px;">0-1건 고객, MRR&lt;$5K</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 11: CTA / Closing -->
+        <!-- Slide 11: 마무리 -->
         <div class="slide" data-slide="11">
             <div class="brand-logo">LegalAI</div>
             <div class="slide-header">
                 <div class="slide-number">11</div>
-                <div class="slide-title">Next Steps</div>
+                <div class="slide-title">다음 단계</div>
             </div>
             <div class="slide-content" style="justify-content: center; align-items: center; text-align: center;">
                 <div class="highlight-box" style="max-width: 900px; margin: 0 auto; padding: 60px;">
                     <div style="font-size: 44px; font-weight: 700; color: #fff; margin-bottom: 40px;">
-                        The $10B legal marketing industry<br>
-                        is ready for AI disruption
+                        $10B 규모의 법률 마케팅 산업이<br>
+                        AI 혁신을 기다리고 있습니다
                     </div>
 
                     <div style="font-size: 22px; color: #60a5fa; line-height: 1.8; margin-bottom: 40px;">
-                        First mover advantage is real.<br>
-                        Territory exclusivity is the moat.<br>
-                        Compliance-first approach is the trust builder.
+                        선점 효과는 실제로 존재합니다.<br>
+                        지역 독점권이 진입 장벽입니다.<br>
+                        컴플라이언스 우선 접근법이 신뢰를 구축합니다.
                     </div>
 
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 40px;">
                         <div>
-                            <div style="font-size: 36px; font-weight: 700; color: #3b82f6;">Week 1</div>
-                            <div style="font-size: 15px; color: #e0e0e0;">Legal counsel +<br>demand survey</div>
+                            <div style="font-size: 36px; font-weight: 700; color: #3b82f6;">1주차</div>
+                            <div style="font-size: 15px; color: #e0e0e0;">법률 자문 +<br>수요 조사</div>
                         </div>
                         <div>
-                            <div style="font-size: 36px; font-weight: 700; color: #3b82f6;">Week 4</div>
-                            <div style="font-size: 15px; color: #e0e0e0;">AI pipeline<br>v0.1 live</div>
+                            <div style="font-size: 36px; font-weight: 700; color: #3b82f6;">4주차</div>
+                            <div style="font-size: 15px; color: #e0e0e0;">AI 파이프라인<br>v0.1 라이브</div>
                         </div>
                         <div>
-                            <div style="font-size: 36px; font-weight: 700; color: #10b981;">Week 12</div>
-                            <div style="font-size: 15px; color: #e0e0e0;">$15K MRR<br>target</div>
+                            <div style="font-size: 36px; font-weight: 700; color: #10b981;">12주차</div>
+                            <div style="font-size: 15px; color: #e0e0e0;">$15K MRR<br>목표 달성</div>
                         </div>
                     </div>
                 </div>
 
                 <div style="margin-top: 50px; font-size: 16px; color: #94a3b8;">
-                    LegalAI &mdash; AI Marketing Automation for Law Firms<br>
-                    Built with Claude Code Multi-Agent Pipeline
+                    LegalAI &mdash; 미국 로펌 대상 AI 마케팅 자동화 플랫폼<br>
+                    Claude Code 멀티 에이전트 파이프라인으로 구축
                 </div>
             </div>
         </div>
@@ -1253,7 +942,6 @@
     <div class="slide-counter">
         <span id="current-slide">1</span> / <span id="total-slides">11</span>
     </div>
-
     <div class="navigation">
         <button class="nav-btn" id="prev-btn">&#x2190;</button>
         <button class="nav-btn" id="next-btn">&#x2192;</button>
@@ -1265,93 +953,47 @@
 
         function showSlide(n) {
             const slides = document.querySelectorAll('.slide');
-
             if (n > totalSlides) currentSlide = totalSlides;
             if (n < 1) currentSlide = 1;
-
             slides.forEach(slide => slide.classList.remove('active'));
             slides[currentSlide - 1].classList.add('active');
-
             document.getElementById('current-slide').textContent = currentSlide;
         }
 
-        function nextSlide() {
-            if (currentSlide < totalSlides) {
-                currentSlide++;
-                showSlide(currentSlide);
-            }
-        }
-
-        function prevSlide() {
-            if (currentSlide > 1) {
-                currentSlide--;
-                showSlide(currentSlide);
-            }
-        }
+        function nextSlide() { if (currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); } }
+        function prevSlide() { if (currentSlide > 1) { currentSlide--; showSlide(currentSlide); } }
 
         document.getElementById('next-btn').addEventListener('click', nextSlide);
         document.getElementById('prev-btn').addEventListener('click', prevSlide);
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
-                e.preventDefault();
-                nextSlide();
-            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-                e.preventDefault();
-                prevSlide();
-            } else if (e.key === 'Home') {
-                e.preventDefault();
-                currentSlide = 1;
-                showSlide(currentSlide);
-            } else if (e.key === 'End') {
-                e.preventDefault();
-                currentSlide = totalSlides;
-                showSlide(currentSlide);
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+            else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevSlide(); }
+            else if (e.key === 'Home') { e.preventDefault(); currentSlide = 1; showSlide(currentSlide); }
+            else if (e.key === 'End') { e.preventDefault(); currentSlide = totalSlides; showSlide(currentSlide); }
+            else if (e.key === 'f' || e.key === 'F') {
+                if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); }
+                else { document.exitFullscreen(); }
             }
         });
 
         let touchStartX = 0;
-        document.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-        });
-
+        document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
         document.addEventListener('touchend', (e) => {
             const diff = touchStartX - e.changedTouches[0].screenX;
-            if (Math.abs(diff) > 50) {
-                diff > 0 ? nextSlide() : prevSlide();
-            }
+            if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
         });
 
-        // Fullscreen
         document.getElementById('fullscreen-btn').addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(() => {});
-            } else {
-                document.exitFullscreen();
-            }
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'f' || e.key === 'F') {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(() => {});
-                } else {
-                    document.exitFullscreen();
-                }
-            }
+            if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); }
+            else { document.exitFullscreen(); }
         });
 
         document.getElementById('total-slides').textContent = totalSlides;
         showSlide(currentSlide);
 
-        window.addEventListener('beforeprint', () => {
-            document.querySelectorAll('.slide').forEach(slide => {
-                slide.style.display = 'flex';
-            });
-        });
-
-        window.addEventListener('afterprint', () => {
-            showSlide(currentSlide);
-        });
+        window.addEventListener('beforeprint', () => { document.querySelectorAll('.slide').forEach(s => { s.style.display = 'flex'; }); });
+        window.addEventListener('afterprint', () => { showSlide(currentSlide); });
     </script>
 </body>
 </html>
