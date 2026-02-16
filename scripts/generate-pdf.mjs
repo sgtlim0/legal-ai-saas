@@ -21,8 +21,10 @@ async function generatePDF() {
     const slides = document.querySelectorAll('.slide')
     const nav = document.querySelector('.navigation')
     const counter = document.querySelector('.slide-counter')
+    const toolbar = document.querySelector('.toolbar')
     if (nav) nav.style.display = 'none'
     if (counter) counter.style.display = 'none'
+    if (toolbar) toolbar.style.display = 'none'
 
     slides.forEach(slide => {
       slide.style.display = 'flex'
