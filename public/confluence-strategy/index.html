@@ -162,16 +162,21 @@
         .risk-bar { flex: 1; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.1); }
         .risk-fill { height: 100%; border-radius: 4px; }
         .risk-value { font-size: 13px; color: #e0e0e0; width: 50px; text-align: right; }
+
+        @media (max-width: 1200px) {
+            .slide { padding: 35px 45px; }
+            .slide-title { font-size: 32px; }
+            .grid-3, .grid-4, .kpi-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media print {
+            .navigation, .slide-counter, .toolbar { display: none; }
+            .slide { page-break-after: always; display: flex !important; position: relative; height: auto; min-height: 100vh; }
+            body { overflow: visible; }
+        }
     </style>
 </head>
 <body>
     <div class="presentation-container">
-        <!-- Toolbar -->
-        <div class="toolbar">
-            <a href="/" class="toolbar-btn" title="Home">&#8962;</a>
-            <button class="toolbar-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
-        </div>
-
         <!-- Slide 1: Cover -->
         <div class="slide active">
             <div class="hmg-logo">Hyundai AutoEver</div>
@@ -1023,39 +1028,57 @@
         </div>
     </div>
 
-    <!-- Navigation -->
-    <div class="navigation">
-        <button class="nav-btn" onclick="changeSlide(-1)">&#8592;</button>
-        <button class="nav-btn" onclick="changeSlide(1)">&#8594;</button>
+    <div class="toolbar">
+        <a href="/" class="toolbar-btn" title="Home">&#8962;</a>
+        <button class="toolbar-btn" id="fullscreen-btn" title="Fullscreen">&#9974;</button>
     </div>
-    <div class="slide-counter">1 / 15</div>
+
+    <!-- Navigation -->
+    <div class="slide-counter"><span id="current-slide">1</span> / <span id="total-slides">15</span></div>
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn">&#x2190;</button>
+        <button class="nav-btn" id="next-btn">&#x2192;</button>
+    </div>
 
     <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const counter = document.querySelector('.slide-counter');
-
+        let currentSlide = 1;
+        const totalSlides = 15;
         function showSlide(n) {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (n + slides.length) % slides.length;
-            slides[currentSlide].classList.add('active');
-            counter.textContent = `${currentSlide + 1} / ${slides.length}`;
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+            slides.forEach(s => s.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            document.getElementById('current-slide').textContent = currentSlide;
         }
-
-        function changeSlide(dir) { showSlide(currentSlide + dir); }
-
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-            else document.exitFullscreen();
-        }
-
-        document.addEventListener('keydown', e => {
-            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
-            if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
-            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
-            if (e.key === 'Home') showSlide(0);
-            if (e.key === 'End') showSlide(slides.length - 1);
+        function nextSlide() { if (currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); } }
+        function prevSlide() { if (currentSlide > 1) { currentSlide--; showSlide(currentSlide); } }
+        document.getElementById('next-btn').addEventListener('click', nextSlide);
+        document.getElementById('prev-btn').addEventListener('click', prevSlide);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+            else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevSlide(); }
+            else if (e.key === 'Home') { e.preventDefault(); currentSlide = 1; showSlide(currentSlide); }
+            else if (e.key === 'End') { e.preventDefault(); currentSlide = totalSlides; showSlide(currentSlide); }
+            else if (e.key === 'f' || e.key === 'F') {
+                if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); }
+                else { document.exitFullscreen(); }
+            }
         });
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+        document.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].screenX;
+            if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
+        });
+        document.getElementById('fullscreen-btn').addEventListener('click', () => {
+            if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); }
+            else { document.exitFullscreen(); }
+        });
+        document.getElementById('total-slides').textContent = totalSlides;
+        showSlide(currentSlide);
+        window.addEventListener('beforeprint', () => { document.querySelectorAll('.slide').forEach(s => { s.style.display = 'flex'; }); });
+        window.addEventListener('afterprint', () => { showSlide(currentSlide); });
     </script>
 </body>
 </html>
